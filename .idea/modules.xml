@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../go-kart-go-network/go-kart-go-network.iml" filepath="$PROJECT_DIR$/../go-kart-go-network/go-kart-go-network.iml" />
+      <module fileurl="file://$PROJECT_DIR$/go-kart-go-server.iml" filepath="$PROJECT_DIR$/go-kart-go-server.iml" />
+    </modules>
+  </component>
+</project>
