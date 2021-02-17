@@ -1,4 +1,5 @@
 import go_kart_go_network.ServerDetails;
+import go_kart_go.*;
 
 public class Main {
 
@@ -6,14 +7,16 @@ public class Main {
 
         // listen for connections
         // when a new client (based on player?) connects, then create a new Object to pass to thread
-        CommunicationThread communicationThreadOne = new CommunicationThread();
-        CommunicationThread communicationThreadTwo = new CommunicationThread();
+//        CommunicationThread communicationThreadOne = new CommunicationThread();
+//        CommunicationThread communicationThreadTwo = new CommunicationThread();
+//
+//        Thread t1 = new Thread(communicationThreadOne);
+//        t1.start() ;
+//
+//        Thread t2 = new Thread(communicationThreadTwo);
+//        t2.start();
 
-        Thread t1 = new Thread(communicationThreadOne);
-        t1.start() ;
-
-        Thread t2 = new Thread(communicationThreadTwo);
-        t2.start();
+        Server server = new Server();
 
         // System.out.println (ServerDetails.getAddress());
         // System.out.println (ServerDetails.port);
