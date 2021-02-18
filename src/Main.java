@@ -28,6 +28,11 @@ public class Main {
 
         while(connectionOpen) {
             message = server.getMessage();
+
+            if (message.equals(Messages.establishConnection)) {
+                server.sendMessage(Messages.connectionSuccessful);
+            }
+
             if (message.equals(Messages.closeConnection)) {
                 connectionOpen = false;
             }

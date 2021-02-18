@@ -6,9 +6,14 @@ public class Server {
     public Server() {
         serverSocket = new ServerCommunicationSocket();
         serverSocket.listen();
+        serverSocket.openInputOutputChannels();
     }
 
     public String getMessage() {
         return serverSocket.getMessage();
+    }
+
+    public void sendMessage(String message) {
+        serverSocket.respond(message);
     }
 }
