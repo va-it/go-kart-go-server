@@ -16,6 +16,10 @@ public class Server {
         return serverSocket.getMessage();
     }
 
+    public Kart getKart() {
+        return (Kart)serverSocket.getKart();
+    }
+
     public int getClientPort() {
         return serverSocket.returnClientPort();
     }

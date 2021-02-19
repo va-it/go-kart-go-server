@@ -1,5 +1,4 @@
 import go_kart_go_network.Messages;
-import go_kart_go_network.ServerDetails;
 import go_kart_go.*;
 
 public class Main {
@@ -50,6 +49,12 @@ public class Main {
                         server.sendMessage(Messages.returnPlayerNumber(1));
                     }
                 }
+            }
+
+            if (message.equals(Messages.sendingKartInfo)) {
+                Kart kart = server.getKart();
+                System.out.println("Kart: " + kart.getPlayer());
+                server.sendMessage(Messages.kartInfoReceived);
             }
 
             if (message.equals(Messages.closeConnection)) {
