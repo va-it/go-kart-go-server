@@ -18,48 +18,17 @@ public class Main {
         //  Thread t2 = new Thread(communicationThreadTwo);
         //  t2.start();
 
-        CommunicationThread communicationThreadPlayerOne = new CommunicationThread();
-        CommunicationThread communicationThreadPlayerTwo = new CommunicationThread();
-
-        Thread playerOneThread = null;
-        Thread playerTwoThread = null;
-
-        // start server (listening...)
+        // start server
         Server server = new Server();
 
-        boolean connectionOpen = true;
-        String message;
-        String udpMessage;
+        CommunicationThread communicationThreadPlayerOne = new CommunicationThread(server);
+        CommunicationThread communicationThreadPlayerTwo = new CommunicationThread(server);
 
-        while(connectionOpen) {
-            message = server.getMessage();
+        Thread playerOneThread = new Thread(communicationThreadPlayerOne);
+        Thread playerTwoThread = new Thread(communicationThreadPlayerTwo);
 
-            // calling this obviously puts the server in listeining mode...
-            // udpMessage = server.getUDPMessage();
-
-            if (message.equals(Messages.establishConnection)) {
-                // tell the client that the connection was successull and return their player number
-                server.sendMessage(Messages.connectionSuccessful);
-                server.sendMessage(Messages.returnPlayerNumber(1));
-            }
-
-            if (message.equals(Messages.sendingKartInfo)) {
-                Kart kart = server.getKart();
-                System.out.println("Kart: " + kart.getPlayer());
-                server.sendMessage(Messages.kartInfoReceived);
-//                server.sendUDPMessage(
-//                        Messages.kartInfoReceived, server.packetReceiver.senderInetAddress, server.packetReceiver.senderPort
-//                );
-            }
-
-            if (message.equals(Messages.closeConnection)) {
-                connectionOpen = false;
-            }
-        }
-
-        // System.out.println (ServerDetails.getAddress());
-        // System.out.println (ServerDetails.port);
-
+        playerOneThread.start();
+        // playerTwoThread.start();
 
     }
 }

@@ -15,7 +15,6 @@ public class Server {
 
     public Server() {
         serverSocket = new TCPServerCommunicationSocket();
-        serverSocket.listen();
         serverUDPSocket = new UDPCommunicationSocket();
     }
 
