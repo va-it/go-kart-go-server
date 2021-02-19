@@ -22,11 +22,8 @@ public class Main {
         CommunicationThread communicationThreadPlayerOne = new CommunicationThread();
         CommunicationThread communicationThreadPlayerTwo = new CommunicationThread();
 
-        Thread playerOneThread = new Thread(communicationThreadPlayerOne);
-        Thread playerTwoThread = new Thread(communicationThreadPlayerTwo);
-
-        playerOneThread.start();
-        playerTwoThread.start();
+        Thread playerOneThread = null;
+        Thread playerTwoThread = null;
 
         // start server (listening...)
         Server server = new Server();
@@ -39,13 +36,18 @@ public class Main {
 
             if (message.equals(Messages.establishConnection)) {
                 server.sendMessage(Messages.connectionSuccessful);
-                if (playerOneThread.isAlive()) {
+                // start threads when user connects. Player 1 is given to whoever connected first
+                if (playerOneThread == null) {
                     communicationThreadPlayerOne.player = 1;
+                    playerOneThread = new Thread(communicationThreadPlayerOne);
+                    playerOneThread.start();
                     server.sendMessage(Messages.returnPlayerNumber(1));
                 } else {
-                    if (playerTwoThread.isAlive()) {
+                    if (playerTwoThread == null) {
                         communicationThreadPlayerTwo.player = 2;
-                        server.sendMessage(Messages.returnPlayerNumber(2));
+                        playerTwoThread = new Thread(communicationThreadPlayerTwo);
+                        playerTwoThread.start();
+                        server.sendMessage(Messages.returnPlayerNumber(1));
                     }
                 }
             }
