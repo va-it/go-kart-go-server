@@ -21,8 +21,8 @@ public class Main {
         // start server
         Server server = new Server();
 
-        CommunicationThread communicationThreadPlayerOne = new CommunicationThread(server);
-        CommunicationThread communicationThreadPlayerTwo = new CommunicationThread(server);
+        CommunicationThread communicationThreadPlayerOne = new CommunicationThread(server, 1);
+        CommunicationThread communicationThreadPlayerTwo = new CommunicationThread(server, 2);
 
         Thread playerOneThread = new Thread(communicationThreadPlayerOne);
         Thread playerTwoThread = new Thread(communicationThreadPlayerTwo);
