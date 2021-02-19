@@ -29,32 +29,27 @@ public class Main {
 
         boolean connectionOpen = true;
         String message;
+        String udpMessage;
 
         while(connectionOpen) {
             message = server.getMessage();
 
+            // calling this obviously puts the server in listeining mode...
+            // udpMessage = server.getUDPMessage();
+
             if (message.equals(Messages.establishConnection)) {
+                // tell the client that the connection was successull and return their player number
                 server.sendMessage(Messages.connectionSuccessful);
-                // start threads when user connects. Player 1 is given to whoever connected first
-                if (playerOneThread == null) {
-                    communicationThreadPlayerOne.player = 1;
-                    playerOneThread = new Thread(communicationThreadPlayerOne);
-                    playerOneThread.start();
-                    server.sendMessage(Messages.returnPlayerNumber(1));
-                } else {
-                    if (playerTwoThread == null) {
-                        communicationThreadPlayerTwo.player = 2;
-                        playerTwoThread = new Thread(communicationThreadPlayerTwo);
-                        playerTwoThread.start();
-                        server.sendMessage(Messages.returnPlayerNumber(1));
-                    }
-                }
+                server.sendMessage(Messages.returnPlayerNumber(1));
             }
 
             if (message.equals(Messages.sendingKartInfo)) {
                 Kart kart = server.getKart();
                 System.out.println("Kart: " + kart.getPlayer());
                 server.sendMessage(Messages.kartInfoReceived);
+//                server.sendUDPMessage(
+//                        Messages.kartInfoReceived, server.packetReceiver.senderInetAddress, server.packetReceiver.senderPort
+//                );
             }
 
             if (message.equals(Messages.closeConnection)) {
