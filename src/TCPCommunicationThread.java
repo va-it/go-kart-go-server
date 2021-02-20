@@ -9,10 +9,14 @@ public class TCPCommunicationThread implements Runnable {
     Server server;
     Kart kart;
 
-    public TCPCommunicationThread(Server server, int player, Kart kart) {
+    public TCPCommunicationThread(Server server, int player) {
         this.server = server;
         this.player = player;
-        this.kart = kart;
+        if (player == 1) {
+            this.kart = ServerKarts.kartPlayerOne;
+        } else {
+            this.kart = ServerKarts.kartPlayerOne;
+        }
     }
 
     @Override
