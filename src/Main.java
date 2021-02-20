@@ -1,46 +1,40 @@
+import go_kart_go.HelperClass;
+import go_kart_go.Kart;
 import go_kart_go_network.Messages;
-import go_kart_go_network.PacketReceiver;
-import go_kart_go_network.UDPCommunicationSocket;
 
 public class Main {
 
     public static void main(String[] args) {
 
-//        UDPCommunicationSocket udpCommunicationSocket = new UDPCommunicationSocket(true);
-//        PacketReceiver receiver = new PacketReceiver();
-//        receiver.receivePacket(udpCommunicationSocket.socket);
-
-        // Develop the multi-threaded server program. More than one solution is possible,but here is one:
-        // The server program needs two user-defined objects for each connection to the clients,
-        // each of which is passed to a thread, this may include input/output streams.
-
-        // start server
+        // start server for TCP communications
         Server serverTCP = new Server(Messages.Protocols.TCP);
 
+        ServerKarts serverKarts = new ServerKarts();
+
         // CREATE THREADS FOR TCP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-        TCPCommunicationThread TCPCommunicationThreadPlayerOne = new TCPCommunicationThread(serverTCP, 1);
-        TCPCommunicationThread TCPCommunicationThreadPlayerTwo = new TCPCommunicationThread(serverTCP, 2);
+        TCPCommunicationThread TCPCommunicationThreadPlayerOne = new TCPCommunicationThread(serverTCP, 1, serverKarts.kartPlayerOne);
+        TCPCommunicationThread TCPCommunicationThreadPlayerTwo = new TCPCommunicationThread(serverTCP, 2, serverKarts.kartPlayerTwo);
 
         Thread playerOneTCPThread = new Thread(TCPCommunicationThreadPlayerOne);
         Thread playerTwoTCPThread = new Thread(TCPCommunicationThreadPlayerTwo);
 
         playerOneTCPThread.start();
-        // playerTwoThread.start();
+        playerTwoTCPThread.start();
         // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
-        // start server
+        // start server for UDP communications
         Server serverUDP = new Server(Messages.Protocols.UDP);
 
         // CREATE THREADS FOR UDP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-        UDPCommunicationThread UDPCommunicationThreadPlayerOne = new UDPCommunicationThread(serverUDP, 1);
-        UDPCommunicationThread UDPCommunicationThreadPlayerTwo = new UDPCommunicationThread(serverUDP, 2);
+        UDPCommunicationThread UDPCommunicationThreadPlayerOne = new UDPCommunicationThread(serverUDP, 1, serverKarts.kartPlayerOne);
+        UDPCommunicationThread UDPCommunicationThreadPlayerTwo = new UDPCommunicationThread(serverUDP, 2, serverKarts.kartPlayerTwo);
 
         Thread playerOneUDPThread = new Thread(UDPCommunicationThreadPlayerOne);
         Thread playerTwoUDPThread = new Thread(UDPCommunicationThreadPlayerTwo);
 
         playerOneUDPThread.start();
-        // playerTwoThread.start();
+        playerTwoUDPThread.start();
         // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
     }

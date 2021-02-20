@@ -1,3 +1,4 @@
+import go_kart_go.HelperClass;
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 
@@ -5,10 +6,12 @@ public class UDPCommunicationThread implements Runnable {
 
     int player;
     Server server;
+    Kart kart;
 
-    public UDPCommunicationThread(Server server, int player) {
+    public UDPCommunicationThread(Server server, int player, Kart kart) {
         this.server = server;
         this.player = player;
+        this.kart = kart;
     }
 
     @Override
@@ -33,10 +36,12 @@ public class UDPCommunicationThread implements Runnable {
                     System.out.println("Kart: " + kart.getPlayer());
                     break;
                 case Messages.getOpponentIndex:
-                    server.sendMessage(Messages.returnSpeed(0), Messages.Protocols.UDP);
+                    int speed = ServerKarts.getOpponentSpeed(this.kart);
+                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.UDP);
                     break;
                 case Messages.getOpponentSpeed:
-                    server.sendMessage(Messages.returnIndex(1), Messages.Protocols.UDP);
+                    int index = ServerKarts.getOpponentIndex(this.kart);
+                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.UDP);
                     break;
                 default:
                     System.err.println("Invalid message: " + message);

@@ -1,4 +1,5 @@
 
+import go_kart_go.HelperClass;
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 
@@ -6,10 +7,12 @@ public class TCPCommunicationThread implements Runnable {
 
     int player;
     Server server;
+    Kart kart;
 
-    public TCPCommunicationThread(Server server, int player) {
+    public TCPCommunicationThread(Server server, int player, Kart kart) {
         this.server = server;
         this.player = player;
+        this.kart = kart;
     }
 
     @Override
