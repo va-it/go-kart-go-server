@@ -9,11 +9,11 @@ public class Main {
         // each of which is passed to a thread, this may include input/output streams.
 
         // start server
-        Server server = new Server();
+        Server serverTCP = new Server("TCP");
 
         // CREATE THREADS FOR TCP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-        TCPCommunicationThread TCPCommunicationThreadPlayerOne = new TCPCommunicationThread(server, 1);
-        TCPCommunicationThread TCPCommunicationThreadPlayerTwo = new TCPCommunicationThread(server, 2);
+        TCPCommunicationThread TCPCommunicationThreadPlayerOne = new TCPCommunicationThread(serverTCP, 1);
+        TCPCommunicationThread TCPCommunicationThreadPlayerTwo = new TCPCommunicationThread(serverTCP, 2);
 
         Thread playerOneTCPThread = new Thread(TCPCommunicationThreadPlayerOne);
         Thread playerTwoTCPThread = new Thread(TCPCommunicationThreadPlayerTwo);
@@ -23,9 +23,12 @@ public class Main {
         // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
+        // start server
+        Server serverUDP = new Server("UDP");
+
         // CREATE THREADS FOR UDP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-        UDPCommunicationThread UDPCommunicationThreadPlayerOne = new UDPCommunicationThread(server, 1);
-        UDPCommunicationThread UDPCommunicationThreadPlayerTwo = new UDPCommunicationThread(server, 2);
+        UDPCommunicationThread UDPCommunicationThreadPlayerOne = new UDPCommunicationThread(serverUDP, 1);
+        UDPCommunicationThread UDPCommunicationThreadPlayerTwo = new UDPCommunicationThread(serverUDP, 2);
 
         Thread playerOneUDPThread = new Thread(UDPCommunicationThreadPlayerOne);
         Thread playerTwoUDPThread = new Thread(UDPCommunicationThreadPlayerTwo);

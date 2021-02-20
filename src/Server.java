@@ -8,9 +8,12 @@ public class Server {
     TCPCommunicationSocket tcpCommunicationSocket;
     UDPCommunicationSocket udpCommunicationSocket;
 
-    public Server() {
-        tcpCommunicationSocket = new TCPCommunicationSocket();
-        udpCommunicationSocket = new UDPCommunicationSocket();
+    public Server(String protocol) {
+        if (protocol.equals("TCP")) {
+            tcpCommunicationSocket = new TCPCommunicationSocket();
+        } else {
+            udpCommunicationSocket = new UDPCommunicationSocket();
+        }
     }
 
     public void listen() {
