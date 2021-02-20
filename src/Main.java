@@ -1,8 +1,13 @@
+import go_kart_go_network.PacketReceiver;
 import go_kart_go_network.UDPCommunicationSocket;
 
 public class Main {
 
     public static void main(String[] args) {
+
+//        UDPCommunicationSocket udpCommunicationSocket = new UDPCommunicationSocket(true);
+//        PacketReceiver receiver = new PacketReceiver();
+//        receiver.receivePacket(udpCommunicationSocket.socket);
 
         // Develop the multi-threaded server program. More than one solution is possible,but here is one:
         // The server program needs two user-defined objects for each connection to the clients,

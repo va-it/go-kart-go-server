@@ -1,4 +1,5 @@
 import go_kart_go.Kart;
+import go_kart_go_network.PacketSender;
 import go_kart_go_network.TCPCommunicationSocket;
 import go_kart_go_network.UDPCommunicationSocket;
 
@@ -12,7 +13,7 @@ public class Server {
         if (protocol.equals("TCP")) {
             tcpCommunicationSocket = new TCPCommunicationSocket();
         } else {
-            udpCommunicationSocket = new UDPCommunicationSocket();
+            udpCommunicationSocket = new UDPCommunicationSocket(true);
         }
     }
 
