@@ -1,3 +1,5 @@
+import go_kart_go_network.UDPCommunicationSocket;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -22,8 +24,8 @@ public class Main {
 
 
         // CREATE THREADS FOR UDP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-        TCPCommunicationThread UDPCommunicationThreadPlayerOne = new TCPCommunicationThread(server, 1);
-        TCPCommunicationThread UDPCommunicationThreadPlayerTwo = new TCPCommunicationThread(server, 2);
+        UDPCommunicationThread UDPCommunicationThreadPlayerOne = new UDPCommunicationThread(server, 1);
+        UDPCommunicationThread UDPCommunicationThreadPlayerTwo = new UDPCommunicationThread(server, 2);
 
         Thread playerOneUDPThread = new Thread(UDPCommunicationThreadPlayerOne);
         Thread playerTwoUDPThread = new Thread(UDPCommunicationThreadPlayerTwo);
