@@ -1,6 +1,3 @@
-import go_kart_go_network.Messages;
-import go_kart_go.*;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -9,26 +6,31 @@ public class Main {
         // The server program needs two user-defined objects for each connection to the clients,
         // each of which is passed to a thread, this may include input/output streams.
 
-        //  CommunicationThread communicationThreadPlayerOne;
-        //  CommunicationThread communicationThreadPlayerTwo;
-        //
-        //  Thread t1 = new Thread(communicationThreadOne);
-        //  t1.start() ;
-        //
-        //  Thread t2 = new Thread(communicationThreadTwo);
-        //  t2.start();
-
         // start server
         Server server = new Server();
 
-        CommunicationThread communicationThreadPlayerOne = new CommunicationThread(server, 1);
-        CommunicationThread communicationThreadPlayerTwo = new CommunicationThread(server, 2);
+        // CREATE THREADS FOR TCP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+        TCPCommunicationThread TCPCommunicationThreadPlayerOne = new TCPCommunicationThread(server, 1);
+        TCPCommunicationThread TCPCommunicationThreadPlayerTwo = new TCPCommunicationThread(server, 2);
 
-        Thread playerOneThread = new Thread(communicationThreadPlayerOne);
-        Thread playerTwoThread = new Thread(communicationThreadPlayerTwo);
+        Thread playerOneTCPThread = new Thread(TCPCommunicationThreadPlayerOne);
+        Thread playerTwoTCPThread = new Thread(TCPCommunicationThreadPlayerTwo);
 
-        playerOneThread.start();
+        playerOneTCPThread.start();
         // playerTwoThread.start();
+        // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+        // CREATE THREADS FOR UDP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+        TCPCommunicationThread UDPCommunicationThreadPlayerOne = new TCPCommunicationThread(server, 1);
+        TCPCommunicationThread UDPCommunicationThreadPlayerTwo = new TCPCommunicationThread(server, 2);
+
+        Thread playerOneUDPThread = new Thread(UDPCommunicationThreadPlayerOne);
+        Thread playerTwoUDPThread = new Thread(UDPCommunicationThreadPlayerTwo);
+
+        playerOneUDPThread.start();
+        // playerTwoThread.start();
+        // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
     }
 }

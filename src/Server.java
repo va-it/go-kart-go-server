@@ -1,42 +1,42 @@
 import go_kart_go.Kart;
-import go_kart_go_network.TCPServerCommunicationSocket;
+import go_kart_go_network.TCPCommunicationSocket;
 import go_kart_go_network.UDPCommunicationSocket;
 
 
 public class Server {
 
-    TCPServerCommunicationSocket serverSocket;
-    UDPCommunicationSocket serverUDPSocket;
+    TCPCommunicationSocket tcpCommunicationSocket;
+    UDPCommunicationSocket udpCommunicationSocket;
 
     public Server() {
-        serverSocket = new TCPServerCommunicationSocket();
-        serverUDPSocket = new UDPCommunicationSocket();
+        tcpCommunicationSocket = new TCPCommunicationSocket();
+        udpCommunicationSocket = new UDPCommunicationSocket();
     }
 
     public void listen() {
-        serverSocket.listen();
+        tcpCommunicationSocket.listen();
     }
 
-    public String getMessage() {
+    public String getMessage(String protocol) {
         String message;
-        message = serverSocket.getMessage();
-        if (message == null) {
-            message = serverUDPSocket.getMessage();
+
+        if (protocol.equals("TCP")) {
+            message = tcpCommunicationSocket.getMessage();
+        } else {
+            message = udpCommunicationSocket.getMessage();
         }
         return message;
     }
 
     public void sendMessage(String message, String protocol) {
         if (protocol.equals("TCP")) {
-            serverSocket.respond(message);
+            tcpCommunicationSocket.sendMessage(message);
         } else {
-            // how do I get the client address and port???
-            // serverUDPSocket.respond(message, address, port);
+            udpCommunicationSocket.sendMessage(message);
         }
-
     }
 
     public Kart getKart() {
-        return (Kart)serverSocket.getKart();
+        return (Kart) udpCommunicationSocket.getObject();
     }
 }
