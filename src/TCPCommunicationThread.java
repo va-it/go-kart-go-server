@@ -31,35 +31,18 @@ public class TCPCommunicationThread implements Runnable {
         while(connectionOpen) {
             message = server.getMessage(protocol);
 
-            // calling this obviously puts the server in listeining mode...
-            // udpMessage = server.getUDPMessage();
-
-            if (message.equals(Messages.establishConnection)) {
-                // tell the client that the connection was successull and return their player number
-                server.sendMessage(Messages.connectionSuccessful, protocol);
-                server.sendMessage(Messages.returnPlayerNumber(player), protocol);
-            }
-
-//            if (message.equals(Messages.sendingKartInfo)) {
-//                Kart kart = server.getKart();
-//                System.out.println("Kart: " + kart.getPlayer());
-//                server.sendMessage(Messages.kartInfoReceived, protocol);
-//            }
-
-//            if (message.equals(Messages.getOpponentSpeed)) {
-//                System.out.println("Need to return the other player's speed");
-//                server.sendMessage(Messages.returnSpeed(10), protocol);
-//            }
-
-            if (message.equals(Messages.closeConnection)) {
-                connectionOpen = false;
+            switch (message) {
+                case Messages.establishConnection:
+                    // tell the client that the connection was successull and return their player number
+                    server.sendMessage(Messages.connectionSuccessful, protocol);
+                    server.sendMessage(Messages.returnPlayerNumber(player), protocol);
+                    break;
+                case Messages.closeConnection:
+                    connectionOpen = false;
+                    break;
+                default:
+                    System.err.println("Invalid message: " + message);
             }
         }
-
-        // System.out.println (ServerDetails.getAddress());
-        // System.out.println (ServerDetails.port);
-
-
-
     }
 }

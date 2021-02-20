@@ -30,27 +30,20 @@ public class UDPCommunicationThread implements Runnable {
         while(connectionOpen) {
             message = server.getMessage(protocol);
 
-            if (message.equals(Messages.sendingKartInfo)) {
-                Kart kart = server.getKart();
-                System.out.println("Kart: " + kart.getPlayer());
-                server.sendMessage(Messages.kartInfoReceived, protocol);
-            }
-
-            if (message.equals(Messages.getOpponentSpeed)) {
-                System.out.println("Need to return the other player's speed");
-                server.sendMessage(Messages.returnSpeed(10), protocol);
-            }
-
-            if (message.equals(Messages.getOpponentIndex)) {
-                System.out.println("Need to return the other player's speed");
-                server.sendMessage(Messages.returnIndex(1), protocol);
+            switch (message) {
+                case Messages.sendingKartInfo:
+                    Kart kart = server.getKart();
+                    System.out.println("Kart: " + kart.getPlayer());
+                    break;
+                case Messages.getOpponentIndex:
+                    server.sendMessage(Messages.returnSpeed(0), protocol);
+                    break;
+                case Messages.getOpponentSpeed:
+                    server.sendMessage(Messages.returnIndex(1), protocol);
+                    break;
+                default:
+                    System.err.println("Invalid message: " + message);
             }
         }
-
-        // System.out.println (ServerDetails.getAddress());
-        // System.out.println (ServerDetails.port);
-
-
-
     }
 }
