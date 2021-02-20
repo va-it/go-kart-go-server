@@ -1,5 +1,5 @@
 import go_kart_go.Kart;
-import go_kart_go_network.PacketSender;
+import go_kart_go_network.Messages;
 import go_kart_go_network.TCPCommunicationSocket;
 import go_kart_go_network.UDPCommunicationSocket;
 
@@ -9,8 +9,8 @@ public class Server {
     TCPCommunicationSocket tcpCommunicationSocket;
     UDPCommunicationSocket udpCommunicationSocket;
 
-    public Server(String protocol) {
-        if (protocol.equals("TCP")) {
+    public Server(Enum protocol) {
+        if (protocol.equals(Messages.Protocols.TCP)) {
             tcpCommunicationSocket = new TCPCommunicationSocket();
         } else {
             udpCommunicationSocket = new UDPCommunicationSocket(true);
@@ -21,10 +21,10 @@ public class Server {
         tcpCommunicationSocket.listen();
     }
 
-    public String getMessage(String protocol) {
+    public String getMessage(Enum protocol) {
         String message;
 
-        if (protocol.equals("TCP")) {
+        if (protocol.equals(Messages.Protocols.TCP)) {
             message = tcpCommunicationSocket.getMessage();
         } else {
             message = udpCommunicationSocket.getMessage();
@@ -32,8 +32,8 @@ public class Server {
         return message;
     }
 
-    public void sendMessage(String message, String protocol) {
-        if (protocol.equals("TCP")) {
+    public void sendMessage(String message, Enum protocol) {
+        if (protocol.equals(Messages.Protocols.TCP)) {
             tcpCommunicationSocket.sendMessage(message);
         } else {
             udpCommunicationSocket.sendMessage(message);

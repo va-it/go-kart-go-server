@@ -5,9 +5,6 @@ public class UDPCommunicationThread implements Runnable {
 
     int player;
     Server server;
-    String protocol = "UDP";
-
-
 
     public UDPCommunicationThread(Server server, int player) {
         this.server = server;
@@ -28,7 +25,7 @@ public class UDPCommunicationThread implements Runnable {
         String message;
 
         while(connectionOpen) {
-            message = server.getMessage(protocol);
+            message = server.getMessage(Messages.Protocols.UDP);
 
             switch (message) {
                 case Messages.sendingKartInfo:
@@ -36,10 +33,10 @@ public class UDPCommunicationThread implements Runnable {
                     System.out.println("Kart: " + kart.getPlayer());
                     break;
                 case Messages.getOpponentIndex:
-                    server.sendMessage(Messages.returnSpeed(0), protocol);
+                    server.sendMessage(Messages.returnSpeed(0), Messages.Protocols.UDP);
                     break;
                 case Messages.getOpponentSpeed:
-                    server.sendMessage(Messages.returnIndex(1), protocol);
+                    server.sendMessage(Messages.returnIndex(1), Messages.Protocols.UDP);
                     break;
                 default:
                     System.err.println("Invalid message: " + message);

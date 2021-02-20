@@ -6,7 +6,6 @@ public class TCPCommunicationThread implements Runnable {
 
     int player;
     Server server;
-    String protocol = "TCP";
 
     public TCPCommunicationThread(Server server, int player) {
         this.server = server;
@@ -29,13 +28,22 @@ public class TCPCommunicationThread implements Runnable {
         String message;
 
         while(connectionOpen) {
-            message = server.getMessage(protocol);
+            message = server.getMessage(Messages.Protocols.TCP);
 
             switch (message) {
                 case Messages.establishConnection:
                     // tell the client that the connection was successull and return their player number
-                    server.sendMessage(Messages.connectionSuccessful, protocol);
-                    server.sendMessage(Messages.returnPlayerNumber(player), protocol);
+                    server.sendMessage(Messages.connectionSuccessful, Messages.Protocols.TCP);
+                    server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);
+                    break;
+                case Messages.getPlayerNumber:
+                    server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);
+                    break;
+                case Messages.startRace:
+                    server.sendMessage(Messages.confirmRaceStarted, Messages.Protocols.TCP);
+                    break;
+                case Messages.stopRace:
+                    server.sendMessage(Messages.confirmRaceStopped, Messages.Protocols.TCP);
                     break;
                 case Messages.closeConnection:
                     connectionOpen = false;

@@ -1,3 +1,4 @@
+import go_kart_go_network.Messages;
 import go_kart_go_network.PacketReceiver;
 import go_kart_go_network.UDPCommunicationSocket;
 
@@ -14,7 +15,7 @@ public class Main {
         // each of which is passed to a thread, this may include input/output streams.
 
         // start server
-        Server serverTCP = new Server("TCP");
+        Server serverTCP = new Server(Messages.Protocols.TCP);
 
         // CREATE THREADS FOR TCP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
         TCPCommunicationThread TCPCommunicationThreadPlayerOne = new TCPCommunicationThread(serverTCP, 1);
@@ -29,7 +30,7 @@ public class Main {
 
 
         // start server
-        Server serverUDP = new Server("UDP");
+        Server serverUDP = new Server(Messages.Protocols.UDP);
 
         // CREATE THREADS FOR UDP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
         UDPCommunicationThread UDPCommunicationThreadPlayerOne = new UDPCommunicationThread(serverUDP, 1);
