@@ -1,42 +1,35 @@
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 
-import java.net.InetAddress;
+import java.net.Socket;
 
 public class TCPCommunicationThread implements Runnable {
-
-    int player;
     Server server;
+    Socket clientSocket = null;
+    int player;
     Kart kart;
     String message;
     boolean connectionIsOpen;
 
-    public TCPCommunicationThread(Server server, int player) {
-        this.server = server;
+
+    public TCPCommunicationThread(Socket clientSocket, int player) {
+        this.clientSocket = clientSocket;
         this.player = player;
-        this.kart = ServerKarts.getKartFromPlayerNumber(player);
         this.connectionIsOpen = false;
     }
-
-    @Override
     public void run() {
-        System.out.print("TCP comms thread for player " + player + " is running..\n");
+            System.out.println("Connected to client : "+ clientSocket.getInetAddress().getHostName());
 
-        // Each server object’s threaded run() method sends kart data to one client via one outputstream
-        // and receives the kartdata via one inputstream from another client.
+            this.server = new Server(Messages.Protocols.TCP, this.clientSocket);
+            this.server.tcpServer.OpenInputOutputStreams();
 
-        // Here goes the logic to communicate with client
-        // e.g. send opponent info, retrieve kart details etc.
+            message = server.getMessage(Messages.Protocols.TCP);
 
-        this.server.listen();
-
-        message = server.getMessage(Messages.Protocols.TCP);
-
-        if (message.equals(Messages.establishConnection)) {
-            server.sendMessage(Messages.connectionSuccessful, Messages.Protocols.TCP);
-            connectionIsOpen = true;
-            listenForMessages();
-        }
+            if (message.equals(Messages.establishConnection)) {
+                server.sendMessage(Messages.connectionSuccessful, Messages.Protocols.TCP);
+                connectionIsOpen = true;
+                listenForMessages();
+            }
     }
 
     private void listenForMessages() {
@@ -45,22 +38,6 @@ public class TCPCommunicationThread implements Runnable {
             switch (message) {
                 case Messages.getPlayerNumber:
                     server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);
-                    break;
-                case Messages.sendingKartInfo:
-                    server.sendMessage(Messages.readyToReceiveKart, Messages.Protocols.TCP);
-                    Kart kart = server.getKart();
-                    System.out.println("Kart received: " + kart.getPlayer());
-                    server.sendMessage(Messages.kartInfoReceived, Messages.Protocols.TCP);
-                    break;
-                case Messages.getOpponentSpeed:
-                    int speed = ServerKarts.getOpponentSpeed(player);
-                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
-                    System.out.println("Speed: " + Messages.returnSpeed(speed));
-                    break;
-                case Messages.getOpponentIndex:
-                    int index = ServerKarts.getOpponentIndex(player);
-                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.TCP);
-                    System.out.println("Index: " + Messages.returnIndex(index));
                     break;
                 case Messages.startRace:
                     server.sendMessage(Messages.confirmRaceStarted, Messages.Protocols.TCP);
@@ -75,8 +52,34 @@ public class TCPCommunicationThread implements Runnable {
                     System.out.println("Close connection");
                     break;
                 default:
-                    System.err.println("Invalid message: " + message);
+                    if (!isPlayerSpecific(message)) {
+                        System.err.println("Invalid message: " + message);
+                    }
             }
         } while(connectionIsOpen);
+    }
+
+    public boolean isPlayerSpecific(String message) {
+        if (message.equals(Messages.sendingKartInfo(player))) {
+            server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.TCP);
+            this.kart = server.getKart();
+            // here I need to check if this is a proper kart or just an empty object
+            System.out.println("Kart received: " + kart.getPlayer());
+            server.sendMessage(Messages.kartInfoReceived(player), Messages.Protocols.TCP);
+            return true;
+        }
+        if (message.equals(Messages.getOpponentSpeed(player))) {
+            int speed = ServerKarts.getOpponentSpeed(player);
+            server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
+            System.out.println("Speed: " + Messages.returnSpeed(speed));
+            return true;
+        }
+        if (message.equals(Messages.getOpponentIndex(player))) {
+            int index = ServerKarts.getOpponentIndex(player);
+            server.sendMessage(Messages.returnIndex(index), Messages.Protocols.TCP);
+            System.out.println("Index: " + Messages.returnIndex(index));
+            return true;
+        }
+        return false;
     }
 }

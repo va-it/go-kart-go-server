@@ -1,39 +1,37 @@
-import go_kart_go_network.Messages;
+import go_kart_go_network.ServerDetails;
+
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Main {
 
+    // Multi thread based on: https://stackoverflow.com/a/14771831
+
     public static void main(String[] args) {
 
-        // start server for TCP communications
-        Server serverTCP = new Server(Messages.Protocols.TCP);
-
         ServerKarts serverKarts = new ServerKarts();
+        int player = 0;
 
-        // CREATE THREADS FOR TCP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-        TCPCommunicationThread TCPCommunicationThreadPlayerOne = new TCPCommunicationThread(serverTCP, 1);
-        TCPCommunicationThread TCPCommunicationThreadPlayerTwo = new TCPCommunicationThread(serverTCP, 2);
+        Thread playerOneThread = null;
+        Thread playerTwoThread = null;
 
-        Thread playerOneTCPThread = new Thread(TCPCommunicationThreadPlayerOne);
-        Thread playerTwoTCPThread = new Thread(TCPCommunicationThreadPlayerTwo);
-
-        playerOneTCPThread.start();
-        playerTwoTCPThread.start();
-        // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-
-        // start server for UDP communications
-        Server serverUDP = new Server(Messages.Protocols.UDP);
-
-        // CREATE THREADS FOR UDP COMMUNICATION &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-        UDPCommunicationThread UDPCommunicationThreadPlayerOne = new UDPCommunicationThread(serverUDP, 1);
-        UDPCommunicationThread UDPCommunicationThreadPlayerTwo = new UDPCommunicationThread(serverUDP, 2);
-
-        Thread playerOneUDPThread = new Thread(UDPCommunicationThreadPlayerOne);
-        Thread playerTwoUDPThread = new Thread(UDPCommunicationThreadPlayerTwo);
-
-        playerOneUDPThread.start();
-        playerTwoUDPThread.start();
-        // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
+        try {
+            ServerSocket server = new ServerSocket(ServerDetails.port);
+            while (player < 2) {
+                Socket socket = server.accept();
+                // HERE WE HAVE CONNECTED WITH A CLIENT SO LET'S START A THREAD
+                ++player;
+                TCPCommunicationThread TCPCommunicationThread = new TCPCommunicationThread(socket, player);
+                if (player == 1) {
+                    playerOneThread = new Thread(TCPCommunicationThread);
+                } else {
+                    playerTwoThread = new Thread(TCPCommunicationThread);
+                }
+            }
+        } catch (Exception ex) {
+            System.err.println("Error : " + ex.getMessage());
+        }
+        playerOneThread.start();
+        playerTwoThread.start();
     }
 }
