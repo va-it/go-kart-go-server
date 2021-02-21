@@ -12,26 +12,29 @@ public class Main {
         ServerKarts serverKarts = new ServerKarts();
         int player = 0;
 
-        Thread playerOneThread = null;
-        Thread playerTwoThread = null;
+        Thread playerOneThread;
+        Thread playerTwoThread;
 
         try {
             ServerSocket server = new ServerSocket(ServerDetails.port);
+            // only allow two clients
             while (player < 2) {
                 Socket socket = server.accept();
-                // HERE WE HAVE CONNECTED WITH A CLIENT SO LET'S START A THREAD
-                ++player;
+                // the line above waits for a connection. So, if we are here, it means
+                // a client was started and sent a request
+                ++player; // the first to connect gets to be player 1
                 TCPCommunicationThread TCPCommunicationThread = new TCPCommunicationThread(socket, player);
                 if (player == 1) {
                     playerOneThread = new Thread(TCPCommunicationThread);
+                    playerOneThread.start();
                 } else {
                     playerTwoThread = new Thread(TCPCommunicationThread);
+                    playerTwoThread.start();
                 }
             }
         } catch (Exception ex) {
+            // Something has gone wrong
             System.err.println("Error : " + ex.getMessage());
         }
-        playerOneThread.start();
-        playerTwoThread.start();
     }
 }
