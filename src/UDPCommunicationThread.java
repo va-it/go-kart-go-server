@@ -28,10 +28,6 @@ public class UDPCommunicationThread implements Runnable {
             message = server.getMessage(Messages.Protocols.UDP);
 
             switch (message) {
-//                case Messages.sendingKartInfo:
-//                    Kart kart = server.getKart();
-//                    System.out.println("Kart: " + kart.getPlayer());
-//                    break;
                 case Messages.getOpponentSpeed:
                     int speed = ServerKarts.getOpponentSpeed(player);
                     server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.UDP);

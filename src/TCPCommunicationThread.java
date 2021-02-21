@@ -1,6 +1,8 @@
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 
+import java.net.InetAddress;
+
 public class TCPCommunicationThread implements Runnable {
 
     int player;
@@ -45,19 +47,32 @@ public class TCPCommunicationThread implements Runnable {
                     server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);
                     break;
                 case Messages.sendingKartInfo:
-                    server.sendMessage(Messages.sendingKartInfo, Messages.Protocols.TCP);
+                    server.sendMessage(Messages.readyToReceiveKart, Messages.Protocols.TCP);
                     Kart kart = server.getKart();
-                    server.sendMessage(Messages.sendingKartInfo, Messages.Protocols.TCP);
-                    System.out.println("Kart: " + kart.getPlayer());
+                    System.out.println("Kart received: " + kart.getPlayer());
+                    server.sendMessage(Messages.kartInfoReceived, Messages.Protocols.TCP);
+                    break;
+                case Messages.getOpponentSpeed:
+                    int speed = ServerKarts.getOpponentSpeed(player);
+                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
+                    System.out.println("Speed: " + Messages.returnSpeed(speed));
+                    break;
+                case Messages.getOpponentIndex:
+                    int index = ServerKarts.getOpponentIndex(player);
+                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.TCP);
+                    System.out.println("Index: " + Messages.returnIndex(index));
                     break;
                 case Messages.startRace:
                     server.sendMessage(Messages.confirmRaceStarted, Messages.Protocols.TCP);
+                    System.out.println("Race started");
                     break;
                 case Messages.stopRace:
                     server.sendMessage(Messages.confirmRaceStopped, Messages.Protocols.TCP);
+                    System.out.println("Race stopped");
                     break;
                 case Messages.closeConnection:
                     connectionIsOpen = false;
+                    System.out.println("Close connection");
                     break;
                 default:
                     System.err.println("Invalid message: " + message);
