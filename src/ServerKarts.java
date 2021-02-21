@@ -11,18 +11,24 @@ public class ServerKarts {
         kartPlayerTwo = new Kart(HelperClass.returnKartColour(2), 2);
     }
 
-    public static int getOpponentSpeed(Kart kart) {
-        int player = kart.getPlayer();
+    public static Kart getKartFromPlayerNumber(int player) {
         if (player == 1) {
+            return ServerKarts.kartPlayerOne;
+        } else {
+            return ServerKarts.kartPlayerTwo;
+        }
+    }
+
+    public static int getOpponentSpeed(int requestingPlayer) {
+        if (requestingPlayer == 1) {
             return kartPlayerTwo.getSpeed();
         } else {
             return kartPlayerOne.getSpeed();
         }
     }
 
-    public static int getOpponentIndex(Kart kart) {
-        int player = kart.getPlayer();
-        if (player == 1) {
+    public static int getOpponentIndex(int requestingPlayer) {
+        if (requestingPlayer == 1) {
             return kartPlayerTwo.getImageIndex();
         } else {
             return kartPlayerOne.getImageIndex();

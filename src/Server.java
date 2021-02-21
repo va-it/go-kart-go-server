@@ -42,5 +42,6 @@ public class Server {
 
     public Kart getKart() {
         return (Kart) udpCommunicationSocket.getObject();
+        // return (Kart) tcpCommunicationSocket.getKart();
     }
 }

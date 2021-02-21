@@ -1,5 +1,3 @@
-
-import go_kart_go.HelperClass;
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 
@@ -12,11 +10,7 @@ public class TCPCommunicationThread implements Runnable {
     public TCPCommunicationThread(Server server, int player) {
         this.server = server;
         this.player = player;
-        if (player == 1) {
-            this.kart = ServerKarts.kartPlayerOne;
-        } else {
-            this.kart = ServerKarts.kartPlayerOne;
-        }
+        this.kart = ServerKarts.getKartFromPlayerNumber(player);
     }
 
     @Override
@@ -39,9 +33,7 @@ public class TCPCommunicationThread implements Runnable {
 
             switch (message) {
                 case Messages.establishConnection:
-                    // tell the client that the connection was successull and return their player number
                     server.sendMessage(Messages.connectionSuccessful, Messages.Protocols.TCP);
-                    server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);
                     break;
                 case Messages.getPlayerNumber:
                     server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);

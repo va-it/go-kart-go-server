@@ -11,11 +11,7 @@ public class UDPCommunicationThread implements Runnable {
     public UDPCommunicationThread(Server server, int player) {
         this.server = server;
         this.player = player;
-        if (player == 1) {
-            this.kart = ServerKarts.kartPlayerOne;
-        } else {
-            this.kart = ServerKarts.kartPlayerOne;
-        }
+        this.kart = ServerKarts.getKartFromPlayerNumber(player);
     }
 
     @Override
@@ -39,12 +35,12 @@ public class UDPCommunicationThread implements Runnable {
                     Kart kart = server.getKart();
                     System.out.println("Kart: " + kart.getPlayer());
                     break;
-                case Messages.getOpponentIndex:
-                    int speed = ServerKarts.getOpponentSpeed(this.kart);
+                case Messages.getOpponentSpeed:
+                    int speed = ServerKarts.getOpponentSpeed(player);
                     server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.UDP);
                     break;
-                case Messages.getOpponentSpeed:
-                    int index = ServerKarts.getOpponentIndex(this.kart);
+                case Messages.getOpponentIndex:
+                    int index = ServerKarts.getOpponentIndex(player);
                     server.sendMessage(Messages.returnIndex(index), Messages.Protocols.UDP);
                     break;
                 default:
