@@ -1,21 +1,20 @@
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 import go_kart_go_network.TCPServer;
-import go_kart_go_network.UDPCommunicationSocket;
+import go_kart_go_network.UDPSocket;
 
 import java.net.Socket;
-
 
 public class Server {
 
     TCPServer tcpServer;
-    UDPCommunicationSocket udpCommunicationSocket;
+    UDPSocket udpSocket;
 
     public Server(Enum protocol, Socket clientSocket) {
         if (protocol.equals(Messages.Protocols.TCP)) {
             tcpServer = new TCPServer(clientSocket);
         } else {
-            udpCommunicationSocket = new UDPCommunicationSocket(true);
+            udpSocket = new UDPSocket(true);
         }
     }
 
@@ -25,7 +24,7 @@ public class Server {
         if (protocol.equals(Messages.Protocols.TCP)) {
             message = tcpServer.getRequest();
         } else {
-            message = udpCommunicationSocket.getMessage();
+            message = udpSocket.getMessage();
         }
         return message;
     }
@@ -34,7 +33,7 @@ public class Server {
         if (protocol.equals(Messages.Protocols.TCP)) {
             tcpServer.sendResponse(message);
         } else {
-            udpCommunicationSocket.sendMessage(message);
+            udpSocket.sendMessage(message);
         }
     }
 
@@ -43,7 +42,7 @@ public class Server {
             if (protocol.equals(Messages.Protocols.TCP)) {
                 return (Kart) tcpServer.getObject();
             } else {
-                return (Kart) udpCommunicationSocket.getObject();
+                return (Kart) udpSocket.getObject();
             }
         } catch (ClassCastException e) {
             System.err.println(e);
