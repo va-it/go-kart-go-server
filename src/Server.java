@@ -38,9 +38,13 @@ public class Server {
         }
     }
 
-    public Kart getKart() {
+    public Kart getKart(Enum protocol) {
         try {
-            return (Kart) tcpServer.getObject();
+            if (protocol.equals(Messages.Protocols.TCP)) {
+                return (Kart) tcpServer.getObject();
+            } else {
+                return (Kart) udpCommunicationSocket.getObject();
+            }
         } catch (ClassCastException e) {
             System.err.println(e);
         }

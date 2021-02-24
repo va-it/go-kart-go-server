@@ -15,6 +15,8 @@ public class Main {
 
         Thread playerOneThread;
         Thread playerTwoThread;
+        Thread playerOneUDPThread;
+        Thread playerTwoUDPThread;
 
         try {
             ServerSocket server = new ServerSocket(ServerDetails.port);
@@ -29,13 +31,18 @@ public class Main {
                 ++player; // the first to connect gets to be player 1
 
                 TCPThread TCPThread = new TCPThread(socket, player);
+                UDPThread udpThread = new UDPThread(socket, player);
 
                 if (player == 1) {
                     playerOneThread = new Thread(TCPThread);
                     playerOneThread.start();
+                    playerOneUDPThread = new Thread(udpThread);
+                    playerOneUDPThread.start();
                 } else {
                     playerTwoThread = new Thread(TCPThread);
                     playerTwoThread.start();
+                    playerTwoUDPThread = new Thread(udpThread);
+                    playerTwoUDPThread.start();
                 }
             }
         } catch (Exception ex) {

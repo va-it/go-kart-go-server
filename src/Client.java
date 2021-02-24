@@ -1,5 +1,7 @@
 import go_kart_go.Kart;
 
+import java.io.StreamCorruptedException;
+
 public class Client {
     private boolean connected;
     private boolean ready;
@@ -35,8 +37,6 @@ public class Client {
 
     public void setKart(Kart kart) {
         this.kart = kart;
-        // this is always saying speed 0
-        System.out.println("I am player" + kart.getPlayer() + "And my speed is: " + kart.getSpeed());
     }
 
     public int getSpeed() {

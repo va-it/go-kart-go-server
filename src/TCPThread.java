@@ -43,11 +43,6 @@ public class TCPThread implements Runnable {
         do {
             message = server.getMessage(Messages.Protocols.TCP);
 
-//            if (getOpponentClient() != null && kart != null) {
-//                System.out.println("I am player " + player + " my speed is " + kart.getSpeed());
-//                System.out.println("I want opponent speed, which is "+ getOpponentClient().kart.getSpeed());
-//            }
-
             switch (message) {
                 case Messages.getPlayerNumber:
                     server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);
@@ -60,8 +55,7 @@ public class TCPThread implements Runnable {
                     break;
                 case Messages.sendingKartInfo:
                     server.sendMessage(Messages.readyToReceiveKart, Messages.Protocols.TCP);
-                    this.kart = server.getKart();
-                    Main.getClientFromPlayerNumber(player).setKart(kart);
+                    Main.getClientFromPlayerNumber(player).setKart(server.getKart(Messages.Protocols.TCP));
                     server.sendMessage(Messages.kartInfoReceived, Messages.Protocols.TCP);
                     break;
                 case Messages.getOpponentSpeed:
