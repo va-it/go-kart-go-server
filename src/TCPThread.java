@@ -42,6 +42,12 @@ public class TCPThread implements Runnable {
     private void listenForMessages() {
         do {
             message = server.getMessage(Messages.Protocols.TCP);
+
+//            if (getOpponentClient() != null && kart != null) {
+//                System.out.println("I am player " + player + " my speed is " + kart.getSpeed());
+//                System.out.println("I want opponent speed, which is "+ getOpponentClient().kart.getSpeed());
+//            }
+
             switch (message) {
                 case Messages.getPlayerNumber:
                     server.sendMessage(Messages.returnPlayerNumber(player), Messages.Protocols.TCP);
@@ -60,7 +66,7 @@ public class TCPThread implements Runnable {
                     break;
                 case Messages.getOpponentSpeed:
                     int speed = getOpponentClient().getSpeed();
-                    server.sendMessage(Messages.returnSpeed(10), Messages.Protocols.TCP);
+                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
                     System.out.println("Speed: " + Messages.returnSpeed(speed));
                     break;
                 case Messages.getOpponentIndex:
