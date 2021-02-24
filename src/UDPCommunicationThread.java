@@ -12,7 +12,7 @@ public class UDPCommunicationThread implements Runnable {
 
     public UDPCommunicationThread(int player) {
         this.player = player;
-        this.kart = ServerKarts.getKartFromPlayerNumber(player);
+        //this.kart = ServerKarts.getKartFromPlayerNumber(player);
     }
 
     @Override
