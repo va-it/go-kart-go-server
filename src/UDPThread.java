@@ -9,17 +9,15 @@ public class UDPThread implements Runnable {
     Server server;
     Kart kart;
     String message;
-    Socket clientSocket;
 
-    public UDPThread(Socket clientSocket, int player) {
+    public UDPThread(int player) {
         this.player = player;
-        this.clientSocket = clientSocket;
     }
 
     @Override
     public void run() {
 
-        this.server = new Server(Messages.Protocols.UDP, clientSocket);
+        this.server = new Server(Messages.Protocols.UDP, null);
 
         do {
             message = server.getMessage(Messages.Protocols.UDP);

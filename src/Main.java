@@ -31,7 +31,8 @@ public class Main {
                 ++player; // the first to connect gets to be player 1
 
                 TCPThread TCPThread = new TCPThread(socket, player);
-                UDPThread udpThread = new UDPThread(socket, player);
+
+                UDPThread udpThread = new UDPThread(player);
 
                 if (player == 1) {
                     playerOneThread = new Thread(TCPThread);
