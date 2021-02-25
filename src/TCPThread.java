@@ -2,8 +2,6 @@ import go_kart_go.HelperClass;
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 
-import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.net.Socket;
 
 public class TCPThread implements Runnable {
@@ -65,22 +63,48 @@ public class TCPThread implements Runnable {
                     System.out.println("Close connection");
                     break;
                 default:
-                    if (message.equals(Messages.sendingKartInfo(player))) {
-                        server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.TCP);
-                        kart = server.getKart(Messages.Protocols.TCP);
-                        if (kart != null) {
-                            try {
-                                System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
-                                Main.getClientFromPlayerNumber(player).setKart(kart);
-                            } catch (NullPointerException e) {
-                                System.err.println("Object corrupt: " + e);
-                            }
-                        }
-                        break;
+                    if (!isPlayerSpecific(message)) {
+                        System.err.println("Invalid message: " + message);
                     }
-                    System.err.println("Invalid message: " + message);
+
             }
         } while(connectionIsOpen);
+    }
+
+    private boolean isPlayerSpecific(String message) {
+        if (message.equals(Messages.sendingKartInfo(player))) {
+            server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.TCP);
+            kart = server.getKart(Messages.Protocols.TCP);
+            if (kart != null) {
+                try {
+                    System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
+                    System.out.println("player " + player + " speed: " + kart.getSpeed());
+                    System.out.println("player " + player + " index: " + kart.getSpeed());
+                    Main.getClientFromPlayerNumber(player).setKart(kart);
+                } catch (NullPointerException e) {
+                    System.err.println("Object corrupt: " + e);
+                }
+            }
+            return true;
+        }
+        if (message.equals(Messages.getOpponentSpeed(player))) {
+            if (getOpponentClient() != null) {
+                int speed = getOpponentClient().getSpeed();
+                server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
+                System.out.println("Speed: " + Messages.returnSpeed(speed));
+            }
+            return true;
+        }
+
+        if (message.equals(Messages.getOpponentIndex(player))) {
+            if (getOpponentClient() != null) {
+                int index = getOpponentClient().getIndex();
+                server.sendMessage(Messages.returnIndex(index), Messages.Protocols.TCP);
+                System.out.println("Index: " + Messages.returnIndex(index));
+            }
+            return true;
+        }
+        return false;
     }
 
     private Client getOpponentClient() {

@@ -1,10 +1,8 @@
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
-import go_kart_go_network.PacketReceiver;
 import go_kart_go_network.TCPServer;
 import go_kart_go_network.UDPSocket;
 
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 

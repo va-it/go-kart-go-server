@@ -37,15 +37,15 @@ public class UDPThread implements Runnable {
 
             if (message.equals(Messages.sendingKartInfo(player))) {
                 server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.UDP, clientInetAddress, clientPort);
-                kart = server.getKart(Messages.Protocols.UDP);
-                if (kart != null) {
-                    try {
-                        System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
-                        Main.getClientFromPlayerNumber(player).setKart(kart);
-                    } catch (NullPointerException e) {
-                        System.err.println("Object corrupt: " + e);
-                    }
-                }
+//                kart = server.getKart(Messages.Protocols.UDP);
+//                if (kart != null) {
+//                    try {
+//                        System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
+//                        Main.getClientFromPlayerNumber(player).setKart(kart);
+//                    } catch (NullPointerException e) {
+//                        System.err.println("Object corrupt: " + e);
+//                    }
+//                }
                 break;
             }
             if (message.equals(Messages.getOpponentSpeed(player))) {
