@@ -47,34 +47,13 @@ public class TCPThread implements Runnable {
                     Main.getClientFromPlayerNumber(player).setReady(true);
                     break;
                 case Messages.requestToStart:
-                    if (getOpponentClient() != null && getOpponentClient().isConnected() && getOpponentClient().isReady()) {
+                    if (getOpponentClient() != null && getOpponentClient().isReadyToStart()) {
                         server.sendMessage(Messages.startRace, Messages.Protocols.TCP);
                         System.out.println("Race started");
                     } else {
                         server.sendMessage(Messages.wait, Messages.Protocols.TCP);
                         System.out.println("Wait");
                     }
-                    break;
-                case Messages.sendingKartInfo:
-                    server.sendMessage(Messages.readyToReceiveKart, Messages.Protocols.TCP);
-                    Main.getClientFromPlayerNumber(player).setKart(server.getKart(Messages.Protocols.TCP));
-                    server.sendMessage(Messages.kartInfoReceived, Messages.Protocols.TCP);
-                    break;
-                case Messages.getOpponentSpeed:
-                    int speed = 0;
-                    if (getOpponentClient() != null) {
-                        speed = getOpponentClient().getSpeed();
-                    }
-                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
-                    System.out.println("Speed: " + Messages.returnSpeed(speed));
-                    break;
-                case Messages.getOpponentIndex:
-                    int index = 12;
-                    if (getOpponentClient() != null) {
-                        index = getOpponentClient().getIndex();
-                    }
-                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.TCP);
-                    System.out.println("Index: " + Messages.returnIndex(index));
                     break;
                 case Messages.stopRace:
                     server.sendMessage(Messages.confirmRaceStopped, Messages.Protocols.TCP);

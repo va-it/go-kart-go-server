@@ -52,4 +52,8 @@ public class Client {
             return 0;
         }
     }
+
+    public boolean isReadyToStart() {
+        return isConnected() && isReady();
+    }
 }

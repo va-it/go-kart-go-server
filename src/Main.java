@@ -1,5 +1,7 @@
 import go_kart_go_network.ServerDetails;
+import go_kart_go_network.UDPSocket;
 
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -20,9 +22,11 @@ public class Main {
 
         try {
             ServerSocket server = new ServerSocket(ServerDetails.port);
+            UDPSocket udpSocket = new UDPSocket(true);
+
             // only allow two clients
             while (player < 2) {
-                Socket socket = server.accept();
+                Socket tcpSocket = server.accept();
                 // the line above waits for a connection. So, if we are here, it means
                 // a client was started and sent a request
 
@@ -30,9 +34,9 @@ public class Main {
 
                 ++player; // the first to connect gets to be player 1
 
-                TCPThread TCPThread = new TCPThread(socket, player);
+                TCPThread TCPThread = new TCPThread(tcpSocket, player);
 
-                UDPThread udpThread = new UDPThread(player);
+                UDPThread udpThread = new UDPThread(udpSocket, player);
 
                 if (player == 1) {
                     playerOneThread = new Thread(TCPThread);
