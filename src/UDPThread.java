@@ -4,6 +4,7 @@ import go_kart_go_network.Messages;
 import go_kart_go_network.UDPSocket;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class UDPThread implements Runnable {
@@ -13,6 +14,8 @@ public class UDPThread implements Runnable {
     Kart kart;
     String message;
     UDPSocket udpSocket;
+    InetAddress clientInetAddress;
+    int clientPort = 0;
 
     public UDPThread(UDPSocket udpSocket, int player) {
         this.player = player;
@@ -27,11 +30,18 @@ public class UDPThread implements Runnable {
         do {
             message = server.getMessage(Messages.Protocols.UDP);
 
+            if (clientInetAddress == null) {
+                clientInetAddress = server.getClientAddress();
+            }
+            if (clientPort == 0) {
+                clientPort = server.getClientPort();
+            }
+
             System.out.println("UDP thread " + player);
 
 
             if (message.equals(Messages.sendingKartInfo(player))) {
-                server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.UDP);
+                server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.UDP, clientInetAddress, clientPort);
                 kart = server.getKart(Messages.Protocols.UDP);
                 try {
                     System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
@@ -44,7 +54,7 @@ public class UDPThread implements Runnable {
             if (message.equals(Messages.getOpponentSpeed(player))) {
                 if (getOpponentClient() != null) {
                     int speed = getOpponentClient().getSpeed();
-                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
+                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.UDP, clientInetAddress, clientPort);
                     System.out.println("Speed: " + Messages.returnSpeed(speed));
                 }
                 break;
@@ -53,7 +63,7 @@ public class UDPThread implements Runnable {
             if (message.equals(Messages.getOpponentIndex(player))) {
                 if (getOpponentClient() != null) {
                     int index = getOpponentClient().getIndex();
-                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.TCP);
+                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.UDP, clientInetAddress, clientPort);
                     System.out.println("Index: " + Messages.returnIndex(index));
                 }
                 break;

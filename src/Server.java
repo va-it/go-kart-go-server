@@ -1,9 +1,11 @@
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
+import go_kart_go_network.PacketReceiver;
 import go_kart_go_network.TCPServer;
 import go_kart_go_network.UDPSocket;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class Server {
@@ -37,8 +39,12 @@ public class Server {
     public void sendMessage(String message, Enum protocol) {
         if (protocol.equals(Messages.Protocols.TCP)) {
             tcpServer.sendResponse(message);
-        } else {
-            udpSocket.sendMessage(message);
+        }
+    }
+
+    public void sendMessage(String message, Enum protocol, InetAddress clientAddress, int clientPort) {
+         if (protocol.equals(Messages.Protocols.UDP)) {
+            udpSocket.sendMessage(message, clientAddress, clientPort);
         }
     }
 
@@ -53,5 +59,13 @@ public class Server {
             System.err.println(e);
         }
         return new Kart();
+    }
+
+    public InetAddress getClientAddress() {
+        return udpSocket.packetReceiver.packet.getAddress();
+    }
+
+    public int getClientPort() {
+        return udpSocket.packetReceiver.packet.getPort();
     }
 }
