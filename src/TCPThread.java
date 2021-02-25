@@ -12,6 +12,7 @@ public class TCPThread implements Runnable {
     int player;
     String message;
     boolean connectionIsOpen;
+    Kart kart;
 
     public TCPThread(Socket clientSocket, int player) {
         this.clientSocket = clientSocket;
@@ -64,6 +65,19 @@ public class TCPThread implements Runnable {
                     System.out.println("Close connection");
                     break;
                 default:
+                    if (message.equals(Messages.sendingKartInfo(player))) {
+                        server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.TCP);
+                        kart = server.getKart(Messages.Protocols.TCP);
+                        if (kart != null) {
+                            try {
+                                System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
+                                Main.getClientFromPlayerNumber(player).setKart(kart);
+                            } catch (NullPointerException e) {
+                                System.err.println("Object corrupt: " + e);
+                            }
+                        }
+                        break;
+                    }
                     System.err.println("Invalid message: " + message);
             }
         } while(connectionIsOpen);
