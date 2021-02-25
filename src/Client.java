@@ -1,7 +1,5 @@
 import go_kart_go.Kart;
 
-import java.io.StreamCorruptedException;
-
 public class Client {
     private boolean connected;
     private boolean ready;

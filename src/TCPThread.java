@@ -10,7 +10,6 @@ public class TCPThread implements Runnable {
     Server server;
     Socket clientSocket = null;
     int player;
-    Kart kart;
     String message;
     boolean connectionIsOpen;
     private Timer connectionChecker;

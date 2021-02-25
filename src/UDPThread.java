@@ -1,7 +1,6 @@
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 
-import java.io.StreamCorruptedException;
 import java.net.Socket;
 
 public class UDPThread implements Runnable {
@@ -25,11 +24,14 @@ public class UDPThread implements Runnable {
         do {
             message = server.getMessage(Messages.Protocols.UDP);
 
+            System.out.println("UDP thread " + player);
+
             switch (message) {
                 case Messages.sendingKartInfo:
                     server.sendMessage(Messages.readyToReceiveKart, Messages.Protocols.UDP);
                     kart = server.getKart(Messages.Protocols.UDP);
                     try {
+                        System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
                         Main.getClientFromPlayerNumber(player).setKart(kart);
                     } catch (NullPointerException e) {
                         System.err.println("Object corrupt: " + e);

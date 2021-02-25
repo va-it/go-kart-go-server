@@ -26,7 +26,7 @@ public class Main {
                 // the line above waits for a connection. So, if we are here, it means
                 // a client was started and sent a request
 
-                clients[player] = new Client(true, player);
+                clients[player] = new Client(true, player+1);
 
                 ++player; // the first to connect gets to be player 1
 
