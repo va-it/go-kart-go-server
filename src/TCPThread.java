@@ -12,8 +12,6 @@ public class TCPThread implements Runnable {
     int player;
     String message;
     boolean connectionIsOpen;
-    private Timer connectionChecker;
-
 
     public TCPThread(Socket clientSocket, int player) {
         this.clientSocket = clientSocket;
@@ -23,8 +21,6 @@ public class TCPThread implements Runnable {
 
     public void run() {
             System.out.println("Connected to client : "+ clientSocket.getInetAddress().getHostName());
-
-            connectionChecker = new Timer(1000, connectionCheckerListener());
 
             this.server = new Server(Messages.Protocols.TCP, this.clientSocket);
             this.server.tcpServer.OpenInputOutputStreams();
@@ -49,8 +45,15 @@ public class TCPThread implements Runnable {
                 case Messages.ready:
                     server.sendMessage(Messages.readyReceived, Messages.Protocols.TCP);
                     Main.getClientFromPlayerNumber(player).setReady(true);
+                    break;
                 case Messages.requestToStart:
-                    connectionChecker.start();
+                    if (getOpponentClient() != null && getOpponentClient().isConnected() && getOpponentClient().isReady()) {
+                        server.sendMessage(Messages.startRace, Messages.Protocols.TCP);
+                        System.out.println("Race started");
+                    } else {
+                        server.sendMessage(Messages.wait, Messages.Protocols.TCP);
+                        System.out.println("Wait");
+                    }
                     break;
                 case Messages.sendingKartInfo:
                     server.sendMessage(Messages.readyToReceiveKart, Messages.Protocols.TCP);
@@ -58,12 +61,18 @@ public class TCPThread implements Runnable {
                     server.sendMessage(Messages.kartInfoReceived, Messages.Protocols.TCP);
                     break;
                 case Messages.getOpponentSpeed:
-                    int speed = getOpponentClient().getSpeed();
+                    int speed = 0;
+                    if (getOpponentClient() != null) {
+                        speed = getOpponentClient().getSpeed();
+                    }
                     server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.TCP);
                     System.out.println("Speed: " + Messages.returnSpeed(speed));
                     break;
                 case Messages.getOpponentIndex:
-                    int index = getOpponentClient().getIndex();
+                    int index = 12;
+                    if (getOpponentClient() != null) {
+                        index = getOpponentClient().getIndex();
+                    }
                     server.sendMessage(Messages.returnIndex(index), Messages.Protocols.TCP);
                     System.out.println("Index: " + Messages.returnIndex(index));
                     break;
@@ -83,18 +92,5 @@ public class TCPThread implements Runnable {
 
     private Client getOpponentClient() {
         return Main.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
-    }
-
-    private ActionListener connectionCheckerListener() {
-        // replaced new ActionListener() { @Override actionPerformed ... } with lambda expression
-        ActionListener actionListener = e -> {
-            System.out.println("Checking other client is connected");
-            if (getOpponentClient() != null && getOpponentClient().isConnected() && getOpponentClient().isReady()) {
-                server.sendMessage(Messages.startRace, Messages.Protocols.TCP);
-                connectionChecker.stop();
-                System.out.println("Race started");
-            }
-        };
-        return actionListener;
     }
 }
