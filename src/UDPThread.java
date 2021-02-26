@@ -3,9 +3,7 @@ import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 import go_kart_go_network.UDPSocket;
 
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
 
 public class UDPThread implements Runnable {
 
@@ -36,16 +34,16 @@ public class UDPThread implements Runnable {
             System.out.println("UDP thread " + player);
 
             if (message.equals(Messages.sendingKartInfo(player))) {
-                server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.UDP, clientInetAddress, clientPort);
-//                kart = server.getKart(Messages.Protocols.UDP);
-//                if (kart != null) {
-//                    try {
-//                        System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
-//                        Main.getClientFromPlayerNumber(player).setKart(kart);
-//                    } catch (NullPointerException e) {
-//                        System.err.println("Object corrupt: " + e);
-//                    }
-//                }
+                // server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.UDP, clientInetAddress, clientPort);
+                kart = server.getKart(Messages.Protocols.UDP);
+                if (kart != null) {
+                    try {
+                        System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
+                        Main.getClientFromPlayerNumber(player).setKart(kart);
+                    } catch (NullPointerException e) {
+                        System.err.println("Object corrupt: " + e);
+                    }
+                }
                 break;
             }
             if (message.equals(Messages.getOpponentSpeed(player))) {

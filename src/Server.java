@@ -29,7 +29,7 @@ public class Server {
         if (protocol.equals(Messages.Protocols.TCP)) {
             message = tcpServer.getRequest();
         } else {
-            message = udpSocket.getMessage();
+            message = udpSocket.getMessage(true);
         }
         return message;
     }

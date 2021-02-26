@@ -24,7 +24,7 @@ public class Main {
 
         try {
             ServerSocket server = new ServerSocket(ServerDetails.port);
-            //UDPSocket udpSocket = new UDPSocket(true);
+            UDPSocket udpSocket = new UDPSocket(true);
 
             // only allow two clients
             while (player < 2) {
@@ -38,18 +38,18 @@ public class Main {
 
                 TCPThread TCPThread = new TCPThread(tcpSocket, player);
 
-                //UDPThread udpThread = new UDPThread(udpSocket, player);
+                UDPThread udpThread = new UDPThread(udpSocket, player);
 
                 if (player == 1) {
                     playerOneThread = new Thread(TCPThread);
                     playerOneThread.start();
-                    //playerOneUDPThread = new Thread(udpThread);
-                    //playerOneUDPThread.start();
+                    playerOneUDPThread = new Thread(udpThread);
+                    playerOneUDPThread.start();
                 } else {
                     playerTwoThread = new Thread(TCPThread);
                     playerTwoThread.start();
-                    //playerTwoUDPThread = new Thread(udpThread);
-                    //playerTwoUDPThread.start();
+                    playerTwoUDPThread = new Thread(udpThread);
+                    playerTwoUDPThread.start();
                 }
             }
         } catch (Exception ex) {
