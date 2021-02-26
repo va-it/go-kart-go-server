@@ -17,10 +17,9 @@ public class Main {
 
         int player = 0;
 
-        Thread playerOneThread;
-        Thread playerTwoThread;
-        Thread playerOneUDPThread;
-        Thread playerTwoUDPThread;
+        Thread playerOneTCPThread;
+        Thread playerTwoTCPThread;
+        Thread singleUDPThread;
 
         try {
             ServerSocket server = new ServerSocket(ServerDetails.port);
@@ -38,18 +37,16 @@ public class Main {
 
                 TCPThread TCPThread = new TCPThread(tcpSocket, player);
 
-                UDPThread udpThread = new UDPThread(udpSocket, player);
+                UDPThread udpThread = new UDPThread(udpSocket);
+                singleUDPThread = new Thread(udpThread);
+                singleUDPThread.start();
 
                 if (player == 1) {
-                    playerOneThread = new Thread(TCPThread);
-                    playerOneThread.start();
-                    playerOneUDPThread = new Thread(udpThread);
-                    playerOneUDPThread.start();
+                    playerOneTCPThread = new Thread(TCPThread);
+                    playerOneTCPThread.start();
                 } else {
-                    playerTwoThread = new Thread(TCPThread);
-                    playerTwoThread.start();
-                    playerTwoUDPThread = new Thread(udpThread);
-                    playerTwoUDPThread.start();
+                    playerTwoTCPThread = new Thread(TCPThread);
+                    playerTwoTCPThread.start();
                 }
             }
         } catch (Exception ex) {

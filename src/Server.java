@@ -59,6 +59,20 @@ public class Server {
         return new Kart();
     }
 
+    public void sendKart(Enum protocol, Kart kart) {
+        if (protocol.equals(Messages.Protocols.TCP)) {
+            tcpServer.sendObject(kart);
+        }
+    }
+
+    public void sendKart(Enum protocol, Kart kart, InetAddress clientAddress, int clientPort) {
+        if (protocol.equals(Messages.Protocols.UDP)) {
+            udpSocket.sendObject(kart, clientAddress, clientPort);
+        }
+    }
+
+
+
     public InetAddress getClientAddress() {
         return udpSocket.packetReceiver.packet.getAddress();
     }

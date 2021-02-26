@@ -7,7 +7,6 @@ import java.net.InetAddress;
 
 public class UDPThread implements Runnable {
 
-    int player;
     Server server;
     Kart kart;
     String message;
@@ -15,8 +14,7 @@ public class UDPThread implements Runnable {
     InetAddress clientInetAddress;
     int clientPort = 0;
 
-    public UDPThread(UDPSocket udpSocket, int player) {
-        this.player = player;
+    public UDPThread(UDPSocket udpSocket) {
         this.udpSocket = udpSocket;
     }
 
@@ -31,42 +29,51 @@ public class UDPThread implements Runnable {
             clientInetAddress = server.getClientAddress();
             clientPort = server.getClientPort();
 
-            System.out.println("UDP thread " + player);
-
-            if (message.equals(Messages.sendingKartInfo(player))) {
+            if (message.equals(Messages.sendingKartInfo)) {
                 // server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.UDP, clientInetAddress, clientPort);
                 kart = server.getKart(Messages.Protocols.UDP);
                 if (kart != null) {
-                    try {
-                        System.out.println("I am player " + player + " and I am setting player " + kart.getPlayer());
-                        Main.getClientFromPlayerNumber(player).setKart(kart);
-                    } catch (NullPointerException e) {
-                        System.err.println("Object corrupt: " + e);
-                    }
+                    Main.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
                 }
-                break;
-            }
-            if (message.equals(Messages.getOpponentSpeed(player))) {
-                if (getOpponentClient() != null) {
-                    int speed = getOpponentClient().getSpeed();
-                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.UDP, clientInetAddress, clientPort);
-                    System.out.println("Speed: " + Messages.returnSpeed(speed));
-                }
-                break;
             }
 
-            if (message.equals(Messages.getOpponentIndex(player))) {
-                if (getOpponentClient() != null) {
-                    int index = getOpponentClient().getIndex();
-                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.UDP, clientInetAddress, clientPort);
-                    System.out.println("Index: " + Messages.returnIndex(index));
+            if (message.equals(Messages.getOpponentKartInfo(1))) {
+                if (getOpponentClient(1) != null) {
+                    Kart kart = Main.getClientFromPlayerNumber(1).getKart();
+                    server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
                 }
-                break;
             }
+
+            if (message.equals(Messages.getOpponentKartInfo(2))) {
+                if (getOpponentClient(2) != null) {
+                    Kart kart = Main.getClientFromPlayerNumber(2).getKart();
+                    server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
+                }
+            }
+
         } while(true);
     }
 
-    private Client getOpponentClient() {
+    private Client getOpponentClient(int player) {
         return Main.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
     }
 }
+
+
+//            if (message.equals(Messages.getOpponentSpeed)) {
+//                if (getOpponentClient() != null) {
+//                    int speed = getOpponentClient().getSpeed();
+//                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.UDP, clientInetAddress, clientPort);
+//                    System.out.println("Speed: " + Messages.returnSpeed(speed));
+//                }
+//                break;
+//            }
+//
+//            if (message.equals(Messages.getOpponentIndex(player))) {
+//                if (getOpponentClient() != null) {
+//                    int index = getOpponentClient().getIndex();
+//                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.UDP, clientInetAddress, clientPort);
+//                    System.out.println("Index: " + Messages.returnIndex(index));
+//                }
+//                break;
+//            }
