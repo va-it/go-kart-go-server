@@ -1,7 +1,6 @@
 import go_kart_go_network.ServerDetails;
 import go_kart_go_network.UDPSocket;
 
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -19,7 +18,7 @@ public class Main {
 
         Thread playerOneTCPThread;
         Thread playerTwoTCPThread;
-        Thread singleUDPThread;
+        Thread singleUDPThread = null;
 
         try {
             ServerSocket server = new ServerSocket(ServerDetails.port);
@@ -31,11 +30,11 @@ public class Main {
                 // the line above waits for a connection. So, if we are here, it means
                 // a client was started and sent a request
 
-                clients[player] = new Client(true, player+1);
-
                 ++player; // the first to connect gets to be player 1
 
                 TCPThread TCPThread = new TCPThread(tcpSocket, player);
+
+                clients[player-1] = new Client(true, player, TCPThread);
 
                 UDPThread udpThread = new UDPThread(udpSocket);
                 singleUDPThread = new Thread(udpThread);
@@ -53,7 +52,6 @@ public class Main {
             // Something has gone wrong
             System.err.println("Error : " + ex.getMessage());
         }
-
     }
 
     public static Client getClientFromPlayerNumber(int player) {

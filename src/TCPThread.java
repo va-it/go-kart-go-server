@@ -60,7 +60,9 @@ public class TCPThread implements Runnable {
                     break;
                 case Messages.closeConnection:
                     connectionIsOpen = false;
-                    System.out.println("Close connection");
+                    System.out.println("Player " + player  + " closed the connection");
+                    Main.getClientFromPlayerNumber(player).setConnected(false);
+                    this.server.tcpServer.closeConnection();
                     break;
                 default:
                     System.err.println("Invalid message: " + message);

@@ -71,8 +71,6 @@ public class Server {
         }
     }
 
-
-
     public InetAddress getClientAddress() {
         return udpSocket.packetReceiver.packet.getAddress();
     }
