@@ -36,21 +36,22 @@ public class UDPThread implements Runnable {
                 }
             }
 
-            if (message.equals("get_kart_" + 1)) {
-                if (getOpponentClient(1) != null) {
-                    Kart kart = Main.getClientFromPlayerNumber(1).getKart();
-                    server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
-                }
+            if (message.equals(Messages.getOpponentKartInfo(1))) {
+                sendKartToClient(1);
             }
 
-            if (message.equals("get_kart_" + 2)) {
-                if (getOpponentClient(2) != null) {
-                    Kart kart = Main.getClientFromPlayerNumber(2).getKart();
-                    server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
-                }
+            if (message.equals(Messages.getOpponentKartInfo(2))) {
+                sendKartToClient(2);
             }
 
         } while(true);
+    }
+
+    private void sendKartToClient(int player) {
+        if (getOpponentClient(player) != null) {
+            Kart kart = Main.getClientFromPlayerNumber(player).getKart();
+            server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
+        }
     }
 
     private Client getOpponentClient(int player) {
