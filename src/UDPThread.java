@@ -30,7 +30,6 @@ public class UDPThread implements Runnable {
             clientPort = server.getClientPort();
 
             if (message.equals(Messages.sendingKartInfo)) {
-                // server.sendMessage(Messages.readyToReceiveKart(player), Messages.Protocols.UDP, clientInetAddress, clientPort);
                 kart = server.getKart(Messages.Protocols.UDP);
                 if (kart != null) {
                     Main.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
@@ -58,22 +57,3 @@ public class UDPThread implements Runnable {
         return Main.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
     }
 }
-
-
-//            if (message.equals(Messages.getOpponentSpeed)) {
-//                if (getOpponentClient() != null) {
-//                    int speed = getOpponentClient().getSpeed();
-//                    server.sendMessage(Messages.returnSpeed(speed), Messages.Protocols.UDP, clientInetAddress, clientPort);
-//                    System.out.println("Speed: " + Messages.returnSpeed(speed));
-//                }
-//                break;
-//            }
-//
-//            if (message.equals(Messages.getOpponentIndex(player))) {
-//                if (getOpponentClient() != null) {
-//                    int index = getOpponentClient().getIndex();
-//                    server.sendMessage(Messages.returnIndex(index), Messages.Protocols.UDP, clientInetAddress, clientPort);
-//                    System.out.println("Index: " + Messages.returnIndex(index));
-//                }
-//                break;
-//            }

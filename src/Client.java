@@ -37,22 +37,6 @@ public class Client {
         this.kart = kart;
     }
 
-    public int getSpeed() {
-        if (kart != null) {
-            return kart.getSpeed();
-        } else {
-            return 0;
-        }
-    }
-
-    public int getIndex() {
-        if (kart != null) {
-            return kart.getImageIndex();
-        } else {
-            return 0;
-        }
-    }
-
     public boolean isReadyToStart() {
         return isConnected() && isReady();
     }
