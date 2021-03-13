@@ -5,7 +5,7 @@ import go_kart_go_network.UDPSocket;
 
 import java.net.InetAddress;
 
-public class UDPThread implements Runnable {
+public class UDPRunnable implements Runnable {
 
     Server server;
     Kart kart;
@@ -14,7 +14,7 @@ public class UDPThread implements Runnable {
     InetAddress clientInetAddress;
     int clientPort = 0;
 
-    public UDPThread(UDPSocket udpSocket) {
+    public UDPRunnable(UDPSocket udpSocket) {
         this.udpSocket = udpSocket;
     }
 

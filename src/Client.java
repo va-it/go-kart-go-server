@@ -4,15 +4,13 @@ public class Client {
     private boolean connected;
     private boolean ready;
     private int playerNumber;
-    private TCPThread tcpThread;
 
     public Kart kart;
 
-    public Client(boolean connected, int playerNumber, TCPThread tcpThread) {
+    public Client(boolean connected, int playerNumber) {
         this.connected = connected;
         this.playerNumber = playerNumber;
         this.kart = new Kart();
-        this.tcpThread = tcpThread;
     }
 
     public boolean isConnected() {

@@ -3,17 +3,17 @@ import go_kart_go_network.Messages;
 
 import java.net.Socket;
 
-public class TCPThread implements Runnable {
+public class TCPRunnable implements Runnable {
     Server server;
     Socket clientSocket = null;
     int player;
     String message;
     boolean connectionIsOpen;
 
-    public TCPThread(Socket clientSocket, int player) {
+    public TCPRunnable(Socket clientSocket, int player) {
         this.clientSocket = clientSocket;
         this.player = player;
-        this.connectionIsOpen = false;
+        this.connectionIsOpen = true;
     }
 
     public void run() {
@@ -26,9 +26,12 @@ public class TCPThread implements Runnable {
 
             if (message.equals(Messages.establishConnection)) {
                 server.sendMessage(Messages.connectionSuccessful, Messages.Protocols.TCP);
-                connectionIsOpen = true;
                 listenForMessages();
             }
+
+            // we get here when the loop in listenForMessages stops
+            // and that happens when the clients interrupts the connection
+            // or it sends a close_connection message
     }
 
     private void listenForMessages() {
