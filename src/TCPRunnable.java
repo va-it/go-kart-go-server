@@ -70,6 +70,18 @@ public class TCPRunnable implements Runnable {
                 default:
                     System.err.println("Invalid message: " + message);
             }
+
+//            // notify if the opposite client is disconnected
+//            if (getOpponentClient() != null && !getOpponentClient().isConnected()) {
+//                server.sendMessage(Messages.opponentQuit, Messages.Protocols.TCP);
+//                System.out.println("Informed that opponent is disconnected");
+//            } else {
+//                if (getOpponentClient() != null && !getOpponentClient().isConnected()) {
+//                    server.sendMessage(Messages.opponentQuit, Messages.Protocols.TCP);
+//                    System.out.println("Informed that opponent is disconnected");
+//                }
+//            }
+
         } while(connectionIsOpen);
     }
 
