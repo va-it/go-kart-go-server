@@ -1,4 +1,3 @@
-import go_kart_go.HelperClass;
 import go_kart_go.Kart;
 import go_kart_go_network.Messages;
 import go_kart_go_network.UDPSocket;
@@ -28,6 +27,8 @@ public class UDPRunnable implements Runnable {
         this.server = new Server(Messages.Protocols.UDP, udpSocket);
 
         do {
+            // lock so that any operation on shared variables (e.g. udpSocket)
+            // is not compromised by other threads
             key.lock();
 
             try {
@@ -39,10 +40,7 @@ public class UDPRunnable implements Runnable {
                 if (message.equals(Messages.sendingKartInfo)) {
                     kart = server.getKart(Messages.Protocols.UDP);
                     if (kart != null) {
-                        GameLogic.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
-
-                        // check here for collisions
-                        // Main.checkCollisions();
+                        ClientManager.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
                     }
                 }
 
@@ -61,16 +59,12 @@ public class UDPRunnable implements Runnable {
     }
 
     private void sendKartToClient(int player) {
-        if (getOpponentClient(player) != null) {
-            Kart kart = GameLogic.getClientFromPlayerNumber(player).getKart();
+        if (ClientManager.getOpponentClient(player) != null) {
+            Kart kart = ClientManager.getClientFromPlayerNumber(player).getKart();
             if (kart != null) {
                 server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
             }
         }
-    }
-
-    private Client getOpponentClient(int player) {
-        return GameLogic.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
     }
 
     public void stopListening() {

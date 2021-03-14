@@ -34,7 +34,7 @@ public class Main {
 
                 TCPRunnable tcpRunnable = new TCPRunnable(tcpSocket, player);
 
-                GameLogic.setClient(player-1, new Client(true, player));
+                ClientManager.setClient(player-1, new Client(true, player));
 
                 udpRunnable = new UDPRunnable(udpSocket);
 
@@ -61,9 +61,9 @@ public class Main {
                 System.err.println("System error: " + e);
             }
 
-            for(int i = 0; i < GameLogic.getClients().length; ++i) {
+            for(int i = 0; i < ClientManager.getClients().length; ++i) {
 
-                if (GameLogic.getClient(i).isConnected()) {
+                if (ClientManager.getClient(i).isConnected()) {
                     activeClientConnections = true;
                     break;
                 }

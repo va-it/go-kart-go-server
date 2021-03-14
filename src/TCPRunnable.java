@@ -1,4 +1,3 @@
-import go_kart_go.HelperClass;
 import go_kart_go_network.Messages;
 
 import java.net.Socket;
@@ -28,17 +27,17 @@ public class TCPRunnable implements Runnable {
                 server.sendMessage(Messages.connectionSuccessful, Messages.Protocols.TCP);
                 listenForMessages();
             }
-
-            // we get here when the loop in listenForMessages stops
-            // and that happens when the clients interrupts the connection
-            // or it sends a close_connection message
     }
 
     private void listenForMessages() {
         do {
             message = server.getMessage(Messages.Protocols.TCP);
 
-            System.out.println("TCP thread " + player);
+            try  {
+                Thread.sleep ( 1000/30 );
+            } catch ( InterruptedException ex) {
+
+            }
 
             switch (message) {
                 case Messages.getPlayerNumber:
@@ -46,10 +45,13 @@ public class TCPRunnable implements Runnable {
                     break;
                 case Messages.ready:
                     server.sendMessage(Messages.readyReceived, Messages.Protocols.TCP);
-                    GameLogic.getClientFromPlayerNumber(player).setReady(true);
+                    ClientManager.getClientFromPlayerNumber(player).setReady(true);
                     break;
                 case Messages.requestToStart:
-                    if (getOpponentClient() != null && getOpponentClient().isReadyToStart()) {
+                    if (
+                            ClientManager.getOpponentClient(player) != null &&
+                            ClientManager.getOpponentClient(player).isReadyToStart()
+                    ) {
                         server.sendMessage(Messages.startRace, Messages.Protocols.TCP);
                         System.out.println("Race started");
                     } else {
@@ -59,20 +61,27 @@ public class TCPRunnable implements Runnable {
                     break;
                 case Messages.stopRace:
                     server.sendMessage(Messages.confirmRaceStopped, Messages.Protocols.TCP);
+                    ClientManager.getClientFromPlayerNumber(player).setReady(false);
                     System.out.println("Race stopped");
                     break;
                 case Messages.closeConnection:
                     connectionIsOpen = false;
                     System.out.println("Player " + player  + " closed the connection");
-                    GameLogic.getClientFromPlayerNumber(player).setConnected(false);
+                    ClientManager.getClientFromPlayerNumber(player).setConnected(false);
                     this.server.tcpServer.closeConnection();
                     break;
                 case Messages.checkOpponentConnection:
-                    if (getOpponentClient() != null && getOpponentClient().isConnected()) {
+                    if (
+                            ClientManager.getOpponentClient(player) != null &&
+                            ClientManager.getOpponentClient(player).isConnected()
+                    ) {
                         server.sendMessage(Messages.opponentConnected, Messages.Protocols.TCP);
                     } else {
-                        if (getOpponentClient() != null && !getOpponentClient().isConnected()) {
-                            server.sendMessage(Messages.opponentQuit, Messages.Protocols.TCP);
+                        if (
+                                ClientManager.getOpponentClient(player) != null &&
+                                !ClientManager.getOpponentClient(player).isConnected()
+                        ) {
+                            server.sendMessage(Messages.opponentNotConnected, Messages.Protocols.TCP);
                         }
                     }
                     break;
@@ -80,9 +89,5 @@ public class TCPRunnable implements Runnable {
                     System.err.println("Invalid message: " + message);
             }
         } while(connectionIsOpen);
-    }
-
-    private Client getOpponentClient() {
-        return GameLogic.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
     }
 }
