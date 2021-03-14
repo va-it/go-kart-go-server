@@ -39,7 +39,10 @@ public class UDPRunnable implements Runnable {
                 if (message.equals(Messages.sendingKartInfo)) {
                     kart = server.getKart(Messages.Protocols.UDP);
                     if (kart != null) {
-                        Main.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
+                        GameLogic.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
+
+                        // check here for collisions
+                        // Main.checkCollisions();
                     }
                 }
 
@@ -59,7 +62,7 @@ public class UDPRunnable implements Runnable {
 
     private void sendKartToClient(int player) {
         if (getOpponentClient(player) != null) {
-            Kart kart = Main.getClientFromPlayerNumber(player).getKart();
+            Kart kart = GameLogic.getClientFromPlayerNumber(player).getKart();
             if (kart != null) {
                 server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
             }
@@ -67,7 +70,7 @@ public class UDPRunnable implements Runnable {
     }
 
     private Client getOpponentClient(int player) {
-        return Main.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
+        return GameLogic.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
     }
 
     public void stopListening() {

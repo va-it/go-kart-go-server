@@ -6,10 +6,6 @@ import java.net.Socket;
 
 public class Main {
 
-    // NOTE: Need to handle case when client closes window. SocketException, connection reset by peer
-
-    public static Client[] clients = new Client[2];
-
     // Multi thread based on: https://stackoverflow.com/a/14771831
 
     public static void main(String[] args) {
@@ -38,7 +34,7 @@ public class Main {
 
                 TCPRunnable tcpRunnable = new TCPRunnable(tcpSocket, player);
 
-                clients[player-1] = new Client(true, player);
+                GameLogic.setClient(player-1, new Client(true, player));
 
                 udpRunnable = new UDPRunnable(udpSocket);
 
@@ -65,9 +61,9 @@ public class Main {
                 System.err.println("System error: " + e);
             }
 
-            for(int i = 0; i < clients.length; ++i) {
+            for(int i = 0; i < GameLogic.getClients().length; ++i) {
 
-                if (clients[i].isConnected()) {
+                if (GameLogic.getClient(i).isConnected()) {
                     activeClientConnections = true;
                     break;
                 }
@@ -83,15 +79,5 @@ public class Main {
 
         // stop listening for messages via UDP
         udpRunnable.stopListening();
-    }
-
-    public static Client getClientFromPlayerNumber(int player) {
-        if (player == 1) {
-            // client[0] holds player 1
-            // because the first client to connect is assigned that number
-            return clients[0];
-        } else {
-            return clients[1];
-        }
     }
 }

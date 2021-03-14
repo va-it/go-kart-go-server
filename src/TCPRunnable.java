@@ -46,7 +46,7 @@ public class TCPRunnable implements Runnable {
                     break;
                 case Messages.ready:
                     server.sendMessage(Messages.readyReceived, Messages.Protocols.TCP);
-                    Main.getClientFromPlayerNumber(player).setReady(true);
+                    GameLogic.getClientFromPlayerNumber(player).setReady(true);
                     break;
                 case Messages.requestToStart:
                     if (getOpponentClient() != null && getOpponentClient().isReadyToStart()) {
@@ -64,7 +64,7 @@ public class TCPRunnable implements Runnable {
                 case Messages.closeConnection:
                     connectionIsOpen = false;
                     System.out.println("Player " + player  + " closed the connection");
-                    Main.getClientFromPlayerNumber(player).setConnected(false);
+                    GameLogic.getClientFromPlayerNumber(player).setConnected(false);
                     this.server.tcpServer.closeConnection();
                     break;
                 case Messages.checkOpponentConnection:
@@ -83,6 +83,6 @@ public class TCPRunnable implements Runnable {
     }
 
     private Client getOpponentClient() {
-        return Main.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
+        return GameLogic.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
     }
 }
