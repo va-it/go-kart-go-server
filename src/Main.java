@@ -36,7 +36,7 @@ public class Main {
 
                 ++player; // the first to connect gets to be player 1
 
-                TCPRunnable TCPRunnable = new TCPRunnable(tcpSocket, player);
+                TCPRunnable tcpRunnable = new TCPRunnable(tcpSocket, player);
 
                 clients[player-1] = new Client(true, player);
 
@@ -45,7 +45,7 @@ public class Main {
                 udpThread = new Thread(udpRunnable);
                 udpThread.start();
 
-                tcpThread = new Thread(TCPRunnable);
+                tcpThread = new Thread(tcpRunnable);
                 tcpThread.start();
             }
         } catch (Exception ex) {
@@ -62,7 +62,7 @@ public class Main {
                 // wait a little before checking (again)
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-
+                System.err.println("System error: " + e);
             }
 
             for(int i = 0; i < clients.length; ++i) {
