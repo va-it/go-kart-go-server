@@ -9,7 +9,6 @@ public class Client {
     public Client(boolean connected, int playerNumber) {
         setConnected(connected);
         setPlayerNumber(playerNumber);
-        setKart(new Kart());
     }
 
     public boolean isConnected() {

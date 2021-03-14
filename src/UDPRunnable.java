@@ -4,6 +4,8 @@ import go_kart_go_network.Messages;
 import go_kart_go_network.UDPSocket;
 
 import java.net.InetAddress;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class UDPRunnable implements Runnable {
 
@@ -13,9 +15,11 @@ public class UDPRunnable implements Runnable {
     UDPSocket udpSocket;
     InetAddress clientInetAddress;
     int clientPort = 0;
+    private Lock key;
 
     public UDPRunnable(UDPSocket udpSocket) {
         this.udpSocket = udpSocket;
+        this.key = new ReentrantLock();
     }
 
     @Override
@@ -24,24 +28,30 @@ public class UDPRunnable implements Runnable {
         this.server = new Server(Messages.Protocols.UDP, udpSocket);
 
         do {
-            message = server.getMessage(Messages.Protocols.UDP);
+            key.lock();
 
-            clientInetAddress = server.getClientAddress();
-            clientPort = server.getClientPort();
+            try {
+                message = server.getMessage(Messages.Protocols.UDP);
 
-            if (message.equals(Messages.sendingKartInfo)) {
-                kart = server.getKart(Messages.Protocols.UDP);
-                if (kart != null) {
-                    Main.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
+                clientInetAddress = server.getClientAddress();
+                clientPort = server.getClientPort();
+
+                if (message.equals(Messages.sendingKartInfo)) {
+                    kart = server.getKart(Messages.Protocols.UDP);
+                    if (kart != null) {
+                        Main.getClientFromPlayerNumber(kart.getPlayer()).setKart(kart);
+                    }
                 }
-            }
 
-            if (message.equals(Messages.getOpponentKartInfo(1))) {
-                sendKartToClient(1);
-            }
+                if (message.equals(Messages.getOpponentKartInfo(1))) {
+                    sendKartToClient(1);
+                }
 
-            if (message.equals(Messages.getOpponentKartInfo(2))) {
-                sendKartToClient(2);
+                if (message.equals(Messages.getOpponentKartInfo(2))) {
+                    sendKartToClient(2);
+                }
+            } finally {
+                key.unlock();
             }
             // keep listening for messages until the socket is closed
         } while(!this.udpSocket.socketIsClosed());
@@ -50,7 +60,9 @@ public class UDPRunnable implements Runnable {
     private void sendKartToClient(int player) {
         if (getOpponentClient(player) != null) {
             Kart kart = Main.getClientFromPlayerNumber(player).getKart();
-            server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
+            if (kart != null) {
+                server.sendKart(Messages.Protocols.UDP, kart, clientInetAddress, clientPort);
+            }
         }
     }
 

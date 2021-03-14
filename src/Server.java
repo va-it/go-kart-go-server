@@ -54,9 +54,9 @@ public class Server {
                 return (Kart) udpSocket.getObject();
             }
         } catch (ClassCastException e) {
-            System.err.println(e);
+            System.err.println("Unable to create kart: " + e);
         }
-        return new Kart();
+        return null;
     }
 
     public void sendKart(Enum protocol, Kart kart) {
