@@ -19,9 +19,14 @@ public class Main {
         Thread udpThread = null;
         Thread tcpThread = null;
 
+        ServerSocket server = null;
+        UDPSocket udpSocket = null;
+
+        UDPRunnable udpRunnable = null;
+
         try {
-            ServerSocket server = new ServerSocket(ServerDetails.port);
-            UDPSocket udpSocket = new UDPSocket(true);
+            server = new ServerSocket(ServerDetails.port);
+            udpSocket = new UDPSocket(true);
 
             // only allow two clients
             while (player < 2) {
@@ -35,7 +40,7 @@ public class Main {
 
                 clients[player-1] = new Client(true, player);
 
-                UDPRunnable udpRunnable = new UDPRunnable(udpSocket);
+                udpRunnable = new UDPRunnable(udpSocket);
 
                 udpThread = new Thread(udpRunnable);
                 udpThread.start();
@@ -48,28 +53,36 @@ public class Main {
             System.err.println("Error : " + ex.getMessage());
         }
 
-        boolean keepAlive = true;
 
-        do {
+        while (true) {
+            // keep server alive until there is at least one client connected
+            boolean activeClientConnections = false;
+
+            try {
+                // wait a little before checking (again)
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+
+            }
 
             for(int i = 0; i < clients.length; ++i) {
 
-                try {
-                    // wait a little before checking again
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-
-                }
-
-                if (!clients[i].isConnected()) {
-                    keepAlive = false;
+                if (clients[i].isConnected()) {
+                    activeClientConnections = true;
+                    break;
                 }
             }
-        } while (keepAlive);
+
+            if (!activeClientConnections) {
+                break;
+            }
+        }
 
         // we reach this when both clients disconnect
         System.out.println("Both client disconnected");
 
+        // stop listening for messages via UDP
+        udpRunnable.stopListening();
     }
 
     public static Client getClientFromPlayerNumber(int player) {

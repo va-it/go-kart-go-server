@@ -4,13 +4,12 @@ public class Client {
     private boolean connected;
     private boolean ready;
     private int playerNumber;
-
-    public Kart kart;
+    private Kart kart;
 
     public Client(boolean connected, int playerNumber) {
-        this.connected = connected;
-        this.playerNumber = playerNumber;
-        this.kart = new Kart();
+        setConnected(connected);
+        setPlayerNumber(playerNumber);
+        setKart(new Kart());
     }
 
     public boolean isConnected() {
@@ -35,6 +34,14 @@ public class Client {
 
     public void setKart(Kart kart) {
         this.kart = kart;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
+
+    public void setPlayerNumber(int playerNumber) {
+        this.playerNumber = playerNumber;
     }
 
     public boolean isReadyToStart() {

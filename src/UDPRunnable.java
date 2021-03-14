@@ -43,8 +43,8 @@ public class UDPRunnable implements Runnable {
             if (message.equals(Messages.getOpponentKartInfo(2))) {
                 sendKartToClient(2);
             }
-
-        } while(true);
+            // keep listening for messages until the socket is closed
+        } while(!this.udpSocket.socketIsClosed());
     }
 
     private void sendKartToClient(int player) {
@@ -56,5 +56,9 @@ public class UDPRunnable implements Runnable {
 
     private Client getOpponentClient(int player) {
         return Main.getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
+    }
+
+    public void stopListening() {
+        this.udpSocket.closeSocket();
     }
 }
