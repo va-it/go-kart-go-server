@@ -1,5 +1,6 @@
 import go_kart_go.HelperClass;
 import go_kart_go.Kart;
+import go_kart_go.RaceTrack;
 
 public class Client {
     private boolean connected;
@@ -42,5 +43,10 @@ public class Client {
 
     public boolean isReadyToStart() {
         return isConnected() && isReady();
+    }
+
+    public void initialiseKart() {
+        this.kart = new Kart(HelperClass.getColourFromPlayerNumber(playerNumber), playerNumber);
+        this.kart.setInitialPosition();
     }
 }

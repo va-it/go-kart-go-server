@@ -52,6 +52,7 @@ public class TCPRunnable implements Runnable {
                             ClientManager.getOpponentClient(player) != null &&
                             ClientManager.getOpponentClient(player).isReadyToStart()
                     ) {
+                        ClientManager.getClientFromPlayerNumber(player).initialiseKart();
                         server.sendMessage(Messages.startRace, Messages.Protocols.TCP);
                         ClientManager.setRaceStatus(true);
                         System.out.println("Race started");
@@ -64,7 +65,12 @@ public class TCPRunnable implements Runnable {
                     if (ClientManager.getRaceStatus()) {
                         server.sendMessage(Messages.raceInProgress, Messages.Protocols.TCP);
                     } else {
-                        server.sendMessage(Messages.stopRace, Messages.Protocols.TCP);
+                        // @TODO: NEVER SET AS WINNER. INVESTIGATE
+                        if (ClientManager.getOpponentClient(player).getKart().isWinner()) {
+                            server.sendMessage(Messages.opponentWins, Messages.Protocols.TCP);
+                        } else {
+                            server.sendMessage(Messages.gameOver, Messages.Protocols.TCP);
+                        }
                     }
                     break;
                 case Messages.stopRace:
