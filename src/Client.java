@@ -1,3 +1,4 @@
+import go_kart_go.HelperClass;
 import go_kart_go.Kart;
 
 public class Client {
@@ -33,10 +34,6 @@ public class Client {
 
     public void setKart(Kart kart) {
         this.kart = kart;
-    }
-
-    public int getPlayerNumber() {
-        return playerNumber;
     }
 
     public void setPlayerNumber(int playerNumber) {

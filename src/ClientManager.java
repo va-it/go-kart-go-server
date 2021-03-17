@@ -1,6 +1,9 @@
 import go_kart_go.HelperClass;
 
 public class ClientManager {
+
+    private static boolean RACE_IN_PROGRESS = false;
+
     private static Client[] clients = new Client[2];
 
     public static Client[] getClients() {
@@ -27,5 +30,13 @@ public class ClientManager {
 
     public static Client getOpponentClient(int player) {
         return getClientFromPlayerNumber(HelperClass.getOpponentPlayerNumber(player));
+    }
+
+    public static void setRaceStatus(boolean status) {
+        RACE_IN_PROGRESS = status;
+    }
+
+    public static boolean getRaceStatus() {
+        return RACE_IN_PROGRESS;
     }
 }

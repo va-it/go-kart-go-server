@@ -53,15 +53,24 @@ public class TCPRunnable implements Runnable {
                             ClientManager.getOpponentClient(player).isReadyToStart()
                     ) {
                         server.sendMessage(Messages.startRace, Messages.Protocols.TCP);
+                        ClientManager.setRaceStatus(true);
                         System.out.println("Race started");
                     } else {
                         server.sendMessage(Messages.wait, Messages.Protocols.TCP);
                         System.out.println("Wait");
                     }
                     break;
+                case Messages.requestRaceStatus:
+                    if (ClientManager.getRaceStatus()) {
+                        server.sendMessage(Messages.raceInProgress, Messages.Protocols.TCP);
+                    } else {
+                        server.sendMessage(Messages.stopRace, Messages.Protocols.TCP);
+                    }
+                    break;
                 case Messages.stopRace:
                     server.sendMessage(Messages.confirmRaceStopped, Messages.Protocols.TCP);
                     ClientManager.getClientFromPlayerNumber(player).setReady(false);
+                    ClientManager.setRaceStatus(false);
                     System.out.println("Race stopped");
                     break;
                 case Messages.closeConnection:
