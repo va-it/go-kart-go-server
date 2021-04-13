@@ -41,6 +41,10 @@ public class Client {
         this.playerNumber = playerNumber;
     }
 
+    public int getPlayerNumber() {
+        return this.playerNumber;
+    }
+
     public boolean isReadyToStart() {
         return isConnected() && isReady();
     }

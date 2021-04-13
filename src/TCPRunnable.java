@@ -61,11 +61,17 @@ public class TCPRunnable implements Runnable {
                         System.out.println("Wait");
                     }
                     break;
+                case Messages.requestWinnerStatus:
+                    if  (ClientManager.winnerIsSet()) {
+                        server.sendMessage(Messages.winnerStatusSet, Messages.Protocols.TCP);
+                    } else {
+                        server.sendMessage(Messages.winnerStatusNotSet, Messages.Protocols.TCP);
+                    }
+                    break;
                 case Messages.requestRaceStatus:
                     if (ClientManager.getRaceStatus()) {
                         server.sendMessage(Messages.raceInProgress, Messages.Protocols.TCP);
                     } else {
-                        // @TODO: NEVER SET AS WINNER. INVESTIGATE
                         if (ClientManager.getOpponentClient(player).getKart().isWinner()) {
                             server.sendMessage(Messages.opponentWins, Messages.Protocols.TCP);
                         } else {
