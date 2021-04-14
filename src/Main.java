@@ -23,6 +23,7 @@ public class Main {
         try {
             server = new ServerSocket(ServerDetails.port);
             udpSocket = new UDPSocket(true);
+            udpRunnable = new UDPRunnable(udpSocket);
 
             // only allow two clients
             while (player < 2) {
@@ -35,8 +36,6 @@ public class Main {
                 TCPRunnable tcpRunnable = new TCPRunnable(tcpSocket, player);
 
                 ClientManager.setClient(player-1, new Client(true, player));
-
-                udpRunnable = new UDPRunnable(udpSocket);
 
                 udpThread = new Thread(udpRunnable);
                 udpThread.start();
