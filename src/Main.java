@@ -12,11 +12,11 @@ public class Main {
 
         int player = 0;
 
-        Thread udpThread = null;
-        Thread tcpThread = null;
+        Thread udpThread;
+        Thread tcpThread;
 
-        ServerSocket server = null;
-        UDPSocket udpSocket = null;
+        ServerSocket server;
+        UDPSocket udpSocket;
 
         UDPRunnable udpRunnable = null;
 
@@ -78,6 +78,8 @@ public class Main {
         System.out.println("Both client disconnected");
 
         // stop listening for messages via UDP
-        udpRunnable.stopListening();
+        if (udpRunnable != null) {
+            udpRunnable.stopListening();
+        }
     }
 }

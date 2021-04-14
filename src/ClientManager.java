@@ -41,10 +41,7 @@ public class ClientManager {
     }
 
     public static boolean winnerIsSet() {
-        if (clients[0].getKart().isWinner() || clients[1].getKart().isWinner()) {
-            return true;
-        }
-        return false;
+        return clients[0].getKart().isWinner() || clients[1].getKart().isWinner();
     }
 
     public static void initialiseKarts() {

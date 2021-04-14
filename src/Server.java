@@ -40,6 +40,7 @@ public class Server {
         }
     }
 
+    // unused but available if required to send UDP messages
     public void sendMessage(String message, Enum protocol, InetAddress clientAddress, int clientPort) {
          if (protocol.equals(Messages.Protocols.UDP)) {
             udpSocket.sendMessage(message, clientAddress, clientPort);
@@ -59,6 +60,7 @@ public class Server {
         return null;
     }
 
+    // unused but available if karts needed to be sent over TCP
     public void sendKart(Enum protocol, Kart kart) {
         if (protocol.equals(Messages.Protocols.TCP)) {
             tcpServer.sendObject(kart);

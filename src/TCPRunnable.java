@@ -4,7 +4,7 @@ import java.net.Socket;
 
 public class TCPRunnable implements Runnable {
     Server server;
-    Socket clientSocket = null;
+    Socket clientSocket;
     int player;
     String message;
     boolean connectionIsOpen;
@@ -36,7 +36,7 @@ public class TCPRunnable implements Runnable {
             try  {
                 Thread.sleep ( 1000/30 );
             } catch ( InterruptedException ex) {
-
+                System.err.println ("Error: " + ex );
             }
 
             switch (message) {
@@ -74,6 +74,7 @@ public class TCPRunnable implements Runnable {
                     } else {
                         if (ClientManager.getOpponentClient(player).getKart().isWinner()) {
                             server.sendMessage(Messages.opponentWins, Messages.Protocols.TCP);
+                            ClientManager.initialiseKarts();
                         } else {
                             server.sendMessage(Messages.gameOver, Messages.Protocols.TCP);
                         }
