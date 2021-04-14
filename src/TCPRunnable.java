@@ -58,7 +58,6 @@ public class TCPRunnable implements Runnable {
                         System.out.println("Race started");
                     } else {
                         server.sendMessage(Messages.wait, Messages.Protocols.TCP);
-                        System.out.println("Wait");
                     }
                     break;
                 case Messages.requestWinnerStatus:
